@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
+import logo from '../Logo/logo192.png';
+
 import * as AiIcons from 'react-icons/ai';
 import * as HiIcons from 'react-icons/hi';
 import * as IoIcons from 'react-icons/io';
@@ -18,7 +20,7 @@ function Navbar() {
     <IconContext.Provider value={{style:{margin:"2px"} }}>
       <AppBar position="static" className="navbar">
         <Toolbar>
-        <img src="src/component/logo.png" alt="Chitter-Chatter logo"/>
+        <img src={logo} alt="Chitter-Chatter logo"/>
         <Link to="#" className='menu-bars'>
           <IconButton>
           <MenuIcon onClick={showSidebar}/>
@@ -30,7 +32,7 @@ function Navbar() {
             </div>
             <InputBase
               placeholder="Search…"
-           
+
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
