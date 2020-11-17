@@ -16,9 +16,10 @@
     "web-vitals": "^0.2.4"
   },
   "homepage": "https://sz.hktr.de/chitter/",
+  "proxy": "https://sz.hktr.de/",
   "scripts": {
-    "predeploy":"npm run build",
-    "deploy":"cd build && scp -r * chitter@sz.hktr.de: ",
+    "predeploy": "npm run build",
+    "deploy": "cd build && scp -r * chitter@sz.hktr.de: ",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
