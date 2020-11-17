@@ -50,7 +50,8 @@ export default function Register() {
 
   const [state, setState] = useState({ name:"", email:"", password:"" });
 
-  function submit() {
+  function submit(e) {
+    e.preventDefault();
     console.log(state);
     fetch("/api/auth/register", {
       method:  "POST",
