@@ -6,12 +6,16 @@ import FriendsLists from './Pages/FriendsLists';
 import Chat from './Pages/Chat';
 import Birthday from './Pages/Birthday';
 import Register from './Pages/Register';
+import Navbar from './component/Navigation/Navbar';
 
 function App() {
   return (
     <>
       <Router>
-        <Register />
+        {/* <Register /> */}
+
+        <Navbar />
+
         <Switch>
           <Route path='/profile' component={Profile} />
           <Route path='/friendsLists' component={FriendsLists} />

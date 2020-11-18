@@ -22,8 +22,8 @@ function Navbar() {
         <Toolbar>
         <img src={logo} alt="Chitter-Chatter logo"/>
         <Link to="#" className='menu-bars'>
-          <IconButton>
-          <MenuIcon onClick={showSidebar}/>
+          <IconButton onClick={showSidebar}>
+          <MenuIcon />
           </IconButton>
         </Link>
         <div className="searchContainer">

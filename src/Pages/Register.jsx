@@ -12,6 +12,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 function Copyright() {
   return (
@@ -44,11 +46,34 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
+const defaults = {
+  name         :'',
+  email        : 'Test123@gmail.com',
+  password     : 'asdasdasdsa8',
+  showPassword : false,
+  status       : false,
+  showStatus   : false
+};
 
 export default function Register() {
   const classes = useStyles();
+  const [state, setState] = useState(defaults);
+  const open = state.showStatus;
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
-  const [state, setState] = useState({ name:"", email:"", password:"" });
+  // const handleClick = () => {
+  //   setOpen(true);
+  // };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+      setState({...state,showStatus:false});
+  };
+
 
   function submit(e) {
     e.preventDefault();
@@ -62,12 +87,26 @@ export default function Register() {
           email:    state.email,
           password: state.password
         })
+    }).then((response)=>response.json().then(data=>({data,response})))
+    .then(({data,response})=> {
+      console.log(data);
+      if(response.ok){
+        setState({
+          ...state,
+          showStatus: true,
+          status: { message : 'Success' }
+        })
+      } else{
+        setState({
+          ...state,
+          showStatus: true,
+          status: { message : data.message, code : response.status }
+        })
+      }
     })
-    .then( response => response.json()   )
-    .then( data     => console.log(data) );
   }
 
-  return (
+  return (<>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -131,7 +170,7 @@ export default function Register() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={ submit }
+            onClick={ submit}
           >
             Sign Up
           </Button>
@@ -148,5 +187,13 @@ export default function Register() {
         <Copyright />
       </Box>
     </Container>
+     <Snackbar open={ open } autoHideDuration={1000} onClose={handleClose}>
+     <Alert
+       onClose={handleClose}
+       severity={ state.status.code ? "error" : "success"}
+     >
+       { state.status.message }
+     </Alert>
+   </Snackbar> </>
   );
 }
