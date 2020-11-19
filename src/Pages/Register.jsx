@@ -50,7 +50,6 @@ const defaults = {
   name         :'',
   email        : 'Test123@gmail.com',
   password     : 'asdasdasdsa8',
-  showPassword : false,
   status       : false,
   showStatus   : false
 };
@@ -62,10 +61,6 @@ export default function Register() {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
-
-  // const handleClick = () => {
-  //   setOpen(true);
-  // };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

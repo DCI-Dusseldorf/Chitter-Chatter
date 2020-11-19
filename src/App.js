@@ -7,16 +7,19 @@ import Chat from './Pages/Chat';
 import Birthday from './Pages/Birthday';
 import Register from './Pages/Register';
 import Navbar from './component/Navigation/Navbar';
+import Login from './Pages/Login';
 
 function App() {
   return (
     <>
       <Router>
         {/* <Register /> */}
-
+        {/* <Test /> */}
         <Navbar />
 
         <Switch>
+          <Route path='/register' component={Register} />
+          <Route path='/login' component={Login} />
           <Route path='/profile' component={Profile} />
           <Route path='/friendsLists' component={FriendsLists} />
           <Route path='/chat' component={Chat} />
