@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
-import logo from '../Logo/logo192.png';
+import logo from '../Logo/logo-side-white.png';
 
 import * as AiIcons from 'react-icons/ai';
 import * as HiIcons from 'react-icons/hi';
