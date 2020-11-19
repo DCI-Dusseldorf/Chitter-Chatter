@@ -16,7 +16,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
-import logo from '../Logo/logo192.png';
+import logo from '../Logo/logo-side-white.png';
 import * as AiIcons from 'react-icons/ai';
 import * as HiIcons from 'react-icons/hi';
 import './Navbar.css';    

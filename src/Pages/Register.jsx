@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../component/Logo/logo192.png';
+import logo from '../component/Logo/logo-side.png';
 
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
