@@ -4,6 +4,18 @@ import * as HiIcons from 'react-icons/hi';
 
 export const SidebarData = [
   {
+    title: 'Register',
+    path: '/register',
+    icon: <></>,
+    cName: 'nav-text',
+  },
+  {
+    title: 'Login',
+    path: '/login',
+    icon: <></>,
+    cName: 'nav-text',
+  },
+  {
     title: 'Newsfeed',
     path: '/',
     icon: <FaIcons.FaRegNewspaper />,
