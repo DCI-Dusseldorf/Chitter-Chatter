@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import logo from '../component/Logo/logo-side.png';
-
+import { useStyles } from './registerStyle';
+import logo from '../../Logo/logo-side.png';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -10,10 +10,9 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Snackbar } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import StatusSnackBar from '../StatusSnackBar';
+
 
 function Copyright() {
   return (
@@ -27,25 +26,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+
 const defaults = {
   name         :'',
   email        : 'Test123@gmail.com',
@@ -58,16 +39,7 @@ export default function Register() {
   const classes = useStyles();
   const [state, setState] = useState(defaults);
   const open = state.showStatus;
-  function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-      setState({...state,showStatus:false});
-  };
+  
 
 
   function submit(e) {
@@ -182,13 +154,7 @@ export default function Register() {
         <Copyright />
       </Box>
     </Container>
-     <Snackbar open={ open } autoHideDuration={1000} onClose={handleClose}>
-     <Alert
-       onClose={handleClose}
-       severity={ state.status.code ? "error" : "success"}
-     >
-       { state.status.message }
-     </Alert>
-   </Snackbar> </>
+    <StatusSnackBar state={state} open={open} setState={setState}/>
+    </>
   );
 }

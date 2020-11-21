@@ -1,13 +1,13 @@
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Navbar from './component/Navigation/Navbar';
+import Login from './component/Authorisation/Login/Login';
+import Register from './component/Authorisation/Register/Register';
 import Newsfeed from './Pages/Newsfeed';
 import Profile from './Pages/Profile';
 import FriendsLists from './Pages/FriendsLists';
 import Chat from './Pages/Chat';
 import Birthday from './Pages/Birthday';
-import Register from './Pages/Register';
-import Navbar from './component/Navigation/Navbar';
-import Login from './Pages/Login';
 
 function App() {
   return (
