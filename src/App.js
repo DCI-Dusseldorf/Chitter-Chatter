@@ -13,8 +13,10 @@ function App() {
   return (
     <>
       <Router>
-        {/* <Register /> */}
-        {/* <Test /> */}
+        {/* <Switch>
+          <Route path='/register' component={Register} />
+          <Route path='/login' component={Login} />
+        </Switch> */}
         <Navbar />
 
         <Switch>
