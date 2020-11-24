@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Addpost() {
+function Addpost(props) {
   const classes = useStyles();
   const [state, setState] = useState({ message: '' });
 
@@ -23,7 +23,7 @@ function Addpost() {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        Authorization: window.token,
+        Authorization: props.token,
       },
       body: JSON.stringify({ message }),
     }).then((response) => console.log(response));

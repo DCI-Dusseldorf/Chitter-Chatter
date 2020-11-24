@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ViewPosts() {
+function ViewPosts(props) {
   const classes = useStyles();
   const [posts, setPosts] = useState([]);
   useEffect(
@@ -44,7 +44,7 @@ function ViewPosts() {
         const response = await fetch('/api/post/', {
           headers: {
             'content-type': 'application/json',
-            Authorization: window.token,
+            Authorization: props.token,
           },
         });
         const result = await response.json();
