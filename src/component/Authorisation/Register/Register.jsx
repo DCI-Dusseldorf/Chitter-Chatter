@@ -30,7 +30,7 @@ function Copyright() {
 
 const defaults = {
   name: '',
-  email: 'Test123@gmail.com',
+  email: 'user3@gmail.com',
   password: 'asdasdasdsa8',
   status: false,
   showStatus: false,
