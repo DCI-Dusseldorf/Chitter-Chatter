@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
+import { Link,useHistory} from 'react-router-dom';
+import './sideNav.css';
+import { SidebarData } from './SidebarData';
+import { useStyles } from './NavbarStyle';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,79 +18,17 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Link } from 'react-router-dom';
-import { SidebarData } from './SidebarData';
 import logo from '../Logo/logo-side-white.png';
 import * as AiIcons from 'react-icons/ai';
 import * as HiIcons from 'react-icons/hi';
-import './Navbar.css';    
+import IfAuth from '../Authorisation/IfAuth';
 
-const useStyles = makeStyles((theme) => ({
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-}));
 
-export default function Test() {
+export default function Navbar() {
   const [sidebar, setSidebar] = useState(false);
+  const refreshToken = useSelector((state) => state.refreshToken);
+  const history=useHistory();
+ 
   const showSidebar = () => setSidebar(!sidebar);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -107,6 +49,20 @@ export default function Test() {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+  const submitLogout = async () => {
+    console.log(refreshToken);
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ refreshToken: refreshToken }),
+    });
+    localStorage.removeItem('access-token');
+    localStorage.removeItem('refresh-token');
+    console.log(response);
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    history.push('/login');
+  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -124,7 +80,7 @@ export default function Test() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={(e) => submitLogout()}>Logout</MenuItem>
     </Menu>
   );
 
@@ -171,101 +127,103 @@ export default function Test() {
 
   return (
     <>
-      <div className={classes.grow}>
-        <AppBar position='static'>
-          <Toolbar>
-            <MenuItem>
-              <img src={logo} alt='Chitter-Chatter logo' />
-            </MenuItem>
-            <IconButton
-              edge='start'
-              className={classes.menuButton}
-              color='inherit'
-              aria-label='open drawer'
-              onClick={showSidebar}
-            >
-              <MenuIcon />
-            </IconButton>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+      <IfAuth>
+        <div className={classes.grow}>
+          <AppBar position='static'>
+            <Toolbar>
+              <MenuItem>
+                <img src={logo} alt='Chitter-Chatter logo' />
+              </MenuItem>
+              <IconButton
+                edge='start'
+                className={classes.menuButton}
+                color='inherit'
+                aria-label='open drawer'
+                onClick={showSidebar}
+              >
+                <MenuIcon />
+              </IconButton>
+              <div className={classes.search}>
+                <InputBase
+                  placeholder='Search…'
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
               </div>
-              <InputBase
-                placeholder='Search…'
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </div>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              <IconButton aria-label='show 4 new mails' color='inherit'>
-                <HomeIcon />
-              </IconButton>
-              <IconButton aria-label='show 4 new mails' color='inherit'>
-                <HiIcons.HiUsers />
-              </IconButton>
-              <IconButton aria-label='show 4 new mails' color='inherit'>
-                <Badge badgeContent={4} color='secondary'>
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-label='show 17 new notifications'
-                color='inherit'
-              >
-                <Badge badgeContent={17} color='secondary'>
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                edge='end'
-                aria-label='account of current user'
-                aria-controls={menuId}
-                aria-haspopup='true'
-                onClick={handleProfileMenuOpen}
-                color='inherit'
-              >
-                <AccountCircle />
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                aria-label='show more'
-                aria-controls={mobileMenuId}
-                aria-haspopup='true'
-                onClick={handleMobileMenuOpen}
-                color='inherit'
-              >
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderMenu}
-      </div>
-      <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
-        <ul className='nav-menu-items' onClick={showSidebar}>
-          <li className='navbar-toggle'>
-            <Link to='#' className='menu-bars'>
-              <AiIcons.AiOutlineClose />
-            </Link>
-          </li>
-          {SidebarData.map((item, index) => {
-            return (
-              <li key={index} className={item.cName}>
-                <Link to={item.path}>
-                  {item.icon}
-                  <span>{item.title}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+              <div className={classes.grow} />
+              <div className={classes.sectionDesktop}>
+                <IconButton aria-label='show 4 new mails' color='inherit'>
+                  <HomeIcon />
+                </IconButton>
+                <IconButton aria-label='show 4 new mails' color='inherit'>
+                  <HiIcons.HiUsers />
+                </IconButton>
+                <IconButton aria-label='show 4 new mails' color='inherit'>
+                  <Badge badgeContent={4} color='secondary'>
+                    <MailIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  aria-label='show 17 new notifications'
+                  color='inherit'
+                >
+                  <Badge badgeContent={17} color='secondary'>
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  edge='end'
+                  aria-label='account of current user'
+                  aria-controls={menuId}
+                  aria-haspopup='true'
+                  onClick={handleProfileMenuOpen}
+                  color='inherit'
+                >
+                  <AccountCircle />
+                </IconButton>
+              </div>
+              <div className={classes.sectionMobile}>
+                <IconButton
+                  aria-label='show more'
+                  aria-controls={mobileMenuId}
+                  aria-haspopup='true'
+                  onClick={handleMobileMenuOpen}
+                  color='inherit'
+                >
+                  <MoreIcon />
+                </IconButton>
+              </div>
+            </Toolbar>
+          </AppBar>
+          {renderMobileMenu}
+          {renderMenu}
+        </div>
+        <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
+          <ul className='nav-menu-items' onClick={showSidebar}>
+            <li className='navbar-toggle'>
+              <Link to='#' className='menu-bars'>
+                <AiIcons.AiOutlineClose />
+              </Link>
+            </li>
+            {SidebarData.map((item, index) => {
+              return (
+                <li key={index} className={item.cName}>
+                  <Link to={item.path}>
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </IfAuth>
     </>
   );
 }
