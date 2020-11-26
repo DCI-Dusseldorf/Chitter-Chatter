@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Button, Card, CardActions, CardHeader } from '@material-ui/core';
 import { useState } from 'react';
+import { updatePosts } from '../../actions';
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: theme.spacing(5, 20),
@@ -26,7 +27,8 @@ function Addpost(props) {
         Authorization: props.token,
       },
       body: JSON.stringify({ message }),
-    }).then((response) => console.log(response));
+    }).then((response) => updatePosts(props.token));
+    setState({ message: '' });
   }
 
   return (
@@ -39,6 +41,7 @@ function Addpost(props) {
             label='Multiline'
             multiline
             rows={4}
+            value={state.message}
             onChange={(e) => setState({ ...state, message: e.target.value })}
             variant='outlined'
           />

@@ -13,6 +13,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Container } from '@material-ui/core';
+import { updatePosts } from '../../actions';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,28 +39,12 @@ const useStyles = makeStyles((theme) => ({
 
 function ViewPosts(props) {
   const classes = useStyles();
-  const [posts, setPosts] = useState([]);
-  useEffect(
-    () =>
-      (async () => {
-        const response = await fetch('/api/post/', {
-          headers: {
-            'content-type': 'application/json',
-            Authorization: props.token,
-          },
-        });
-        const result = await response.json();
-        console.log(result);
-        if (!response.ok) return;
-        setPosts(result);
-      })(),
-    []
-  );
-  // return posts.map((post, index) => (
-  //   <Paper key={index} className={classes.root}>
-  //     {post.message}
-  //   </Paper>
-  // ));
+  const posts = useSelector((state) => state.posts);
+  useEffect(() => {
+    updatePosts(props.token);
+    //updatePosts(props.token).then((posts)=>setPosts(posts)); same as above
+  }, []);
+
   return (
     <Container className={classes.rootGrid}>
       {posts.map((post, index) => (

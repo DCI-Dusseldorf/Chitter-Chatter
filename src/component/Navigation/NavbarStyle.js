@@ -32,7 +32,7 @@ export const useStyles = makeStyles((theme) => ({
     height: '100%',
     position: 'absolute',
     top: '2px',
-    left: '10px',
+    left: '1px',
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',

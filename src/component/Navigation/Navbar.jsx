@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link,useHistory} from 'react-router-dom';
 import './sideNav.css';
 import { SidebarData } from './SidebarData';
 import { useStyles } from './NavbarStyle';
@@ -23,10 +23,12 @@ import * as AiIcons from 'react-icons/ai';
 import * as HiIcons from 'react-icons/hi';
 import IfAuth from '../Authorisation/IfAuth';
 
+
 export default function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const refreshToken = useSelector((state) => state.refreshToken);
-  console.log(refreshToken);
+  const history=useHistory();
+ 
   const showSidebar = () => setSidebar(!sidebar);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -48,13 +50,18 @@ export default function Navbar() {
     handleMobileMenuClose();
   };
   const submitLogout = async () => {
+    console.log(refreshToken);
     const response = await fetch('/api/auth/logout', {
       method: 'POST',
-      body: { refreshToken: refreshToken },
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ refreshToken: refreshToken }),
     });
+    localStorage.removeItem('access-token');
+    localStorage.removeItem('refresh-token');
     console.log(response);
     setAnchorEl(null);
     handleMobileMenuClose();
+    history.push('/login');
   };
 
   const handleMobileMenuOpen = (event) => {
