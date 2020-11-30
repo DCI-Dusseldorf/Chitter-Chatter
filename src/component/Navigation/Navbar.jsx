@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link,useHistory} from 'react-router-dom';
 import './sideNav.css';
 import { SidebarData } from './SidebarData';
@@ -28,6 +28,7 @@ export default function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const refreshToken = useSelector((state) => state.refreshToken);
   const history=useHistory();
+  const dispatch = useDispatch();
  
   const showSidebar = () => setSidebar(!sidebar);
   const classes = useStyles();
@@ -50,15 +51,17 @@ export default function Navbar() {
     handleMobileMenuClose();
   };
   const submitLogout = async () => {
-    console.log(refreshToken);
     const response = await fetch('/api/auth/logout', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ refreshToken: refreshToken }),
     });
-    localStorage.removeItem('access-token');
-    localStorage.removeItem('refresh-token');
     console.log(response);
+    dispatch({
+      type: 'Logout',
+      accessToken: false,
+      refreshToken: false,
+    });
     setAnchorEl(null);
     handleMobileMenuClose();
     history.push('/login');

@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import StatusSnackBar from '../StatusSnackBar';
 import { useDispatch, useSelector } from 'react-redux';
+import { updatePosts } from '../../../actions';
 
 function Copyright() {
   return (
@@ -56,14 +57,16 @@ function Login() {
     })
       .then((response) => response.json().then((data) => ({ data, response })))
       .then(({ data, response }) => {
-        console.log(data);
         if (data.tokens)
+        localStorage.setItem('access-token', state.accessToken);
+        localStorage.setItem('refresh-token', state.refreshToken);
           dispatch({
             type: 'Login',
             accessToken: data.tokens.access.token,
             refreshToken: data.tokens.refresh.token,
             user: data.user,
           });
+          updatePosts(data.tokens.access.token)
         if (response.ok) {
           setState({
             ...state,

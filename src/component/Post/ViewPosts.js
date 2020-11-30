@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Post from './Post';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Container } from '@material-ui/core';
 import { useSelector } from 'react-redux';
+import { updatePosts } from '../../actions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,9 +22,12 @@ const useStyles = makeStyles((theme) => ({
 const ViewPosts = (props) => {
   const classes = useStyles();
   const posts = useSelector((state) => {
-    console.log(state);
     return state.posts;
   });
+  useEffect(() => {
+    if (props.token) updatePosts(props.token);
+    //updatePosts(props.token).then((posts)=>setPosts(posts)); same as above
+  }, [props.token]);
   return (
     <Container className={classes.rootGrid}>
       {posts.map((post) => (

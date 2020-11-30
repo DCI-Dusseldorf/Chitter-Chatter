@@ -11,7 +11,6 @@ const reducer = (state = defaulttokens, action) => {
   switch (action.type) {
     case 'Login':
     case 'Register':
-      console.log(state, action);
       return {
         ...state,
         accessToken: action.accessToken,
@@ -19,7 +18,14 @@ const reducer = (state = defaulttokens, action) => {
         user: action.user,
       };
     case 'Logout':
-      return;
+      localStorage.removeItem('access-token');
+      localStorage.removeItem('refresh-token');
+      console.log(state, action);
+      return {
+        ...state,
+        accessToken: action.accessToken,
+        refreshToken: action.refreshToken,
+      };
     case 'updatePost':
       return {
         ...state,
@@ -37,7 +43,11 @@ export const store = createStore(
 
 store.subscribe(() => {
   const state = store.getState();
-  if (localStorage['access-token'] === state.accessToken) return;
+  if (
+    // typeof localStorage['access-token'] === 'undefined' ||
+    localStorage['access-token'] === state.accessToken
+  )
+    return;
   localStorage.setItem('access-token', state.accessToken);
   localStorage.setItem('refresh-token', state.refreshToken);
 });
