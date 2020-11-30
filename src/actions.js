@@ -1,4 +1,5 @@
 import { store } from './redux';
+
 export const updatePosts = async () => {
   const response = await fetch('/api/post/', {
     headers: {
@@ -10,6 +11,7 @@ export const updatePosts = async () => {
   if (!response.ok) return;
   store.dispatch({ type: 'updatePost', posts: result });
 };
+
 export const likePost = async (postId) => {
   const response = await fetch(`/like/post/${postId}/like`, {
     method: 'PUT',
@@ -20,8 +22,9 @@ export const likePost = async (postId) => {
   });
   console.log(response);
 };
+
 export const editPost = async (postId, message) => {
-  const response = await fetch(`/api/post/${postId}`, {
+  await fetch(`/api/post/${postId}`, {
     method: 'PATCH',
     headers: {
       'content-type': 'application/json',
@@ -29,10 +32,10 @@ export const editPost = async (postId, message) => {
     },
     body: JSON.stringify({ message: message }),
   });
-  console.log(response);
+  updatePosts();
 };
 
-export const deletePost = async (postId, token) => {
+export const deletePost = async (postId) => {
   await fetch(`/api/post/${postId}`, {
     method: 'DELETE',
     headers: {
@@ -40,5 +43,5 @@ export const deletePost = async (postId, token) => {
       Authorization: store.getState().accessToken,
     },
   });
-  updatePosts(token);
+  updatePosts();
 };

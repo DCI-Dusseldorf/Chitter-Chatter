@@ -27,7 +27,7 @@ function Addpost(props) {
         Authorization: props.token,
       },
       body: JSON.stringify({ message }),
-    }).then((response) => updatePosts(props.token));
+    }).then((response) => updatePosts());
     setState({ message: '' });
   }
 
