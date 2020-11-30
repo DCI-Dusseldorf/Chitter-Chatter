@@ -13,12 +13,11 @@ import Profile from './Pages/Profile';
 import FriendsLists from './Pages/FriendsLists';
 import Chat from './Pages/Chat';
 import Birthday from './Pages/Birthday';
-import IfAuth from './component/Authorisation/IfAuth';
 
 function App() {
   return (
     <>
-      <Router>
+      <Router basename='/chitter'>
         {/* <Switch>
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
