@@ -5,7 +5,7 @@ import * as HiIcons from 'react-icons/hi';
 export const SidebarData = [
   {
     title: 'Newsfeed',
-    path: '/',
+    path: '/newsfeed',
     icon: <FaIcons.FaRegNewspaper />,
     cName: 'nav-text',
   },
