@@ -43,7 +43,11 @@ export default function Post(props) {
     setAnchorEl(null);
   };
 
-  const [state, setState] = useState({ editedMessage: post.message, editToggle: 'none' });
+  const [state, setState] = useState({
+    editedMessage: post.message,
+    editModeOff: '',
+    editModeOn: 'none'
+  });
 
   return (
     <>
@@ -70,7 +74,7 @@ export default function Post(props) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleClose();
-                    setState({...state, editToggle: ''})
+                    setState({...state, editModeOn: '', editModeOff: 'none'})
                   }}
                 >
                   Edit
@@ -90,24 +94,26 @@ export default function Post(props) {
           subheader={moment(post.createdAt).fromNow()}
         />
         <CardContent>
-          {/* vvvvvvv         show -> hide    !!!DOESN'T WORK!!!*/}
-          <Typography
-            component={Box}
-            display=''
-            variant='body2'
-            color='textSecondary'
-          >
-            {post.message}
-          </Typography>
-          {/* vvvvvv          hide -> show */}
-          <TextField
-            component={Box}
-            display={state.editToggle}
-            multiline rows={3}
-            variant='outlined'
-            value={state.editedMessage}
-            onChange={(e) => setState({ ...state, editedMessage: e.target.value })}
-          />
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
+          <Box display={state.editModeOff}>
+            <Typography
+              variant='body2'
+              color='textSecondary'
+            >
+              {post.message}
+            </Typography>
+          </Box>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvv         hide -> show */}
+          <Box display={state.editModeOn}>
+            <TextField
+              // component={Box}
+              // display={state.editModeOn}
+              multiline rows={3}
+              variant='outlined'
+              value={state.editedMessage}
+              onChange={(e) => setState({ ...state, editedMessage: e.target.value })}
+            />
+          </Box>
         </CardContent>
         <CardMedia
           className={classes.media}
@@ -125,20 +131,20 @@ export default function Post(props) {
           <IconButton aria-label='share'>
             <ShareIcon />
           </IconButton>
-          {/* vvv             hide -> show */}
-          <Button
-            component={Box}
-            display={state.editToggle}
-            variant='contained'
-            color='primary'
-            onClick={(e) => {
-              e.preventDefault();
-              editPost(post.id, state.editedMessage);
-              setState({...state, editToggle: 'none'})
-            }}
-          >
-            Save
-          </Button>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvv         hide -> show */}
+          <Box display={state.editModeOn}>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={(e) => {
+                e.preventDefault();
+                editPost(post.id, state.editedMessage);
+                setState({...state, editModeOn: 'none', editModeOff: ''})
+              }}
+            >
+              Save
+            </Button>
+          </Box>
         </CardActions>
       </Card>
     </>
