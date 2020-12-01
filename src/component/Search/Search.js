@@ -14,7 +14,7 @@ function Search() {
   const change = (e) => search(e.target.value);
   console.log(list);
   const select = (e, v, r) => {
-    if (r === 'select-option') history.push(`/user/${v.id}`);
+    if (r === 'select-option') history.push(`/profile/${v.id}`);
   };
   return (
     <Autocomplete

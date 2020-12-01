@@ -60,3 +60,7 @@
 span {
   margin-left: 16px;
 }
+.logoNav {
+  width: 125px;
+  background: 'red';
+}

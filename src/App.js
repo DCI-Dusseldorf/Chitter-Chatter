@@ -1,10 +1,5 @@
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from './component/Navigation/Navbar';
 import Login from './component/Authorisation/Login/Login';
 import Register from './component/Authorisation/Register/Register';
@@ -27,7 +22,7 @@ function App() {
         <Switch>
           <Route path='/login' component={Login} />
           <Route path='/chitter' component={Register} />
-          <Route path='/profile' component={Profile} />
+          <Route path='/profile/:userId?' component={Profile} />
           <Route path='/friendsLists' component={FriendsLists} />
           <Route path='/chat' component={Chat} />
           <Route path='/birthday' component={Birthday} />

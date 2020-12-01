@@ -7,13 +7,13 @@ import { useStyles } from './NavbarStyle';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
+
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
-import SearchIcon from '@material-ui/icons/Search';
+
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -22,6 +22,7 @@ import logo from '../Logo/logo-side-white.png';
 import * as AiIcons from 'react-icons/ai';
 import * as HiIcons from 'react-icons/hi';
 import IfAuth from '../Authorisation/IfAuth';
+import Search from '../Search/Search';
 
 
 export default function Navbar() {
@@ -135,7 +136,7 @@ export default function Navbar() {
           <AppBar position='static'>
             <Toolbar>
               <MenuItem>
-                <img src={logo} alt='Chitter-Chatter logo' />
+                <img src={logo} alt='Chitter-Chatter logo' className='logoNav' />
               </MenuItem>
               <IconButton
                 edge='start'
@@ -146,19 +147,7 @@ export default function Navbar() {
               >
                 <MenuIcon />
               </IconButton>
-              <div className={classes.search}>
-                <InputBase
-                  placeholder='Search…'
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-              </div>
+             <Search/>            
               <div className={classes.grow} />
               <div className={classes.sectionDesktop}>
                 <IconButton aria-label='show 4 new mails' color='inherit'>

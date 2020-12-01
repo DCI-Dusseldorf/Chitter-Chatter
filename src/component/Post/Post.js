@@ -93,7 +93,7 @@ export default function Post(props) {
         <CardMedia
           className={classes.media}
           image='/static/images/cards/paella.jpg'
-          title='Paella dish'
+          title='my pic'
         />
         <CardActions disableSpacing>
           <IconButton aria-label='add to favorites'>
