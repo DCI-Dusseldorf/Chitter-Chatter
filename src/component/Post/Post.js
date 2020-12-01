@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -13,21 +13,23 @@ import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { red } from '@material-ui/core/colors';
 import { deletePost, editPost, likePost } from '../../actions';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Box, Button, Menu, MenuItem, TextField } from '@material-ui/core';
 var moment = require('moment');
 
 const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 345,
+    marginBottom: "10px"
   },
   media: {
     height: 0,
-    paddingTop: '56.25%', // 16:9
+    // paddingTop: '56.25%', // 16:9
   },
   avatar: {
     backgroundColor: red[500],
   },
 }));
+
 export default function Post(props) {
   const { post } = props;
   const classes = useStyles();
@@ -40,6 +42,12 @@ export default function Post(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [state, setState] = useState({
+    editedMessage: post.message,
+    editModeOff: '',
+    editModeOn: 'none'
+  });
 
   return (
     <>
@@ -66,7 +74,7 @@ export default function Post(props) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleClose();
-                    editPost(post.id, post.message);
+                    setState({...state, editModeOn: '', editModeOff: 'none'})
                   }}
                 >
                   Edit
@@ -86,9 +94,26 @@ export default function Post(props) {
           subheader={moment(post.createdAt).fromNow()}
         />
         <CardContent>
-          <Typography variant='body2' color='textSecondary' component='p'>
-            {post.message}
-          </Typography>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
+          <Box display={state.editModeOff}>
+            <Typography
+              variant='body2'
+              color='textSecondary'
+            >
+              {post.message}
+            </Typography>
+          </Box>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvv         hide -> show */}
+          <Box display={state.editModeOn}>
+            <TextField
+              // component={Box}
+              // display={state.editModeOn}
+              multiline rows={3}
+              variant='outlined'
+              value={state.editedMessage}
+              onChange={(e) => setState({ ...state, editedMessage: e.target.value })}
+            />
+          </Box>
         </CardContent>
         <CardMedia
           className={classes.media}
@@ -106,6 +131,20 @@ export default function Post(props) {
           <IconButton aria-label='share'>
             <ShareIcon />
           </IconButton>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvv         hide -> show */}
+          <Box display={state.editModeOn}>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={(e) => {
+                e.preventDefault();
+                editPost(post.id, state.editedMessage);
+                setState({...state, editModeOn: 'none', editModeOff: ''})
+              }}
+            >
+              Save
+            </Button>
+          </Box>
         </CardActions>
       </Card>
     </>
