@@ -9,17 +9,17 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+import CommentIcon from '@material-ui/icons/Comment';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { red } from '@material-ui/core/colors';
-import { deletePost, editPost, likePost } from '../../actions';
+import { commentPost, deletePost, editPost, likePost } from '../../actions';
 import { Box, Button, Menu, MenuItem, TextField } from '@material-ui/core';
 var moment = require('moment');
 
 const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 345,
-    marginBottom: "10px"
+    marginBottom: '10px',
   },
   media: {
     height: 0,
@@ -46,7 +46,8 @@ export default function Post(props) {
   const [state, setState] = useState({
     editedMessage: post.message,
     editModeOff: '',
-    editModeOn: 'none'
+    editModeOn: 'none',
+    reaction: '',
   });
 
   return (
@@ -74,7 +75,7 @@ export default function Post(props) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleClose();
-                    setState({...state, editModeOn: '', editModeOff: 'none'})
+                    setState({ ...state, editModeOn: '', editModeOff: 'none' });
                   }}
                 >
                   Edit
@@ -96,10 +97,7 @@ export default function Post(props) {
         <CardContent>
           {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
           <Box display={state.editModeOff}>
-            <Typography
-              variant='body2'
-              color='textSecondary'
-            >
+            <Typography variant='body2' color='textSecondary'>
               {post.message}
             </Typography>
           </Box>
@@ -108,10 +106,13 @@ export default function Post(props) {
             <TextField
               // component={Box}
               // display={state.editModeOn}
-              multiline rows={3}
+              multiline
+              rows={3}
               variant='outlined'
               value={state.editedMessage}
-              onChange={(e) => setState({ ...state, editedMessage: e.target.value })}
+              onChange={(e) =>
+                setState({ ...state, editedMessage: e.target.value })
+              }
             />
           </Box>
         </CardContent>
@@ -124,12 +125,18 @@ export default function Post(props) {
           <IconButton aria-label='add to favorites'>
             <FavoriteIcon
               onClick={(e) => {
-                likePost(post.id);
+                if (state.reaction === 'like')
+                  setState({ ...state, reaction: 'like' });
+                likePost(post.id, state.reaction);
               }}
             />
           </IconButton>
           <IconButton aria-label='share'>
-            <ShareIcon />
+            <CommentIcon
+              onClick={(e) => {
+                commentPost(post.id);
+              }}
+            />
           </IconButton>
           {/*  vvvvvvvvvvvvvvvvvvvvvvvvvv         hide -> show */}
           <Box display={state.editModeOn}>
@@ -139,7 +146,7 @@ export default function Post(props) {
               onClick={(e) => {
                 e.preventDefault();
                 editPost(post.id, state.editedMessage);
-                setState({...state, editModeOn: 'none', editModeOff: ''})
+                setState({ ...state, editModeOn: 'none', editModeOff: '' });
               }}
             >
               Save
