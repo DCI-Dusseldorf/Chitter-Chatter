@@ -24,7 +24,7 @@ export const likePost = async (postId) => {
 };
 
 export const editPost = async (postId, message) => {
-  const response = await fetch(`/api/post/${postId}`, {
+  await fetch(`/api/post/${postId}`, {
     method: 'PATCH',
     headers: {
       'content-type': 'application/json',
@@ -32,10 +32,10 @@ export const editPost = async (postId, message) => {
     },
     body: JSON.stringify({ message: message }),
   });
-  console.log(response);
+  updatePosts();
 };
 
-export const deletePost = async (postId, token) => {
+export const deletePost = async (postId) => {
   await fetch(`/api/post/${postId}`, {
     method: 'DELETE',
     headers: {
@@ -43,7 +43,7 @@ export const deletePost = async (postId, token) => {
       Authorization: store.getState().accessToken,
     },
   });
-  updatePosts(token);
+  updatePosts();
 };
 
 export const search = async (match, type = 'User', field = 'name') => {

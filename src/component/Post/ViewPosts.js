@@ -31,7 +31,7 @@ const ViewPosts = (props) => {
   return (
     <Container className={classes.rootGrid}>
       {posts.map((post) => (
-        <Post post={post} />
+        <Post post={post} key={post.id} />
       ))}
     </Container>
   );
