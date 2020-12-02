@@ -12,13 +12,25 @@ export const updatePosts = async () => {
   store.dispatch({ type: 'updatePost', posts: result });
 };
 
-export const likePost = async (postId) => {
-  const response = await fetch(`/like/post/${postId}/like`, {
+export const likePost = async (postId, reaction) => {
+  console.log(reaction);
+  const response = await fetch(`/api/like/post/${postId}/${reaction}`, {
     method: 'PUT',
     headers: {
       'content-type': 'application/json',
       Authorization: store.getState().accessToken,
     },
+  });
+  console.log(response);
+};
+export const commentPost = async (postId, message = 'hello') => {
+  const response = await fetch(`/api/post/${postId}`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: store.getState().accessToken,
+    },
+    body: JSON.stringify({ message: message }),
   });
   console.log(response);
 };

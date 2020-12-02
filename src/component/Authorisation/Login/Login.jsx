@@ -57,7 +57,7 @@ function Login() {
     })
       .then((response) => response.json().then((data) => ({ data, response })))
       .then(({ data, response }) => {
-        if (data.tokens)
+        if (data.tokens){
         localStorage.setItem('access-token', state.accessToken);
         localStorage.setItem('refresh-token', state.refreshToken);
           dispatch({
@@ -66,7 +66,13 @@ function Login() {
             refreshToken: data.tokens.refresh.token,
             user: data.user,
           });
-          updatePosts(data.tokens.access.token)
+          updatePosts(data.tokens.access.token)}else{
+            dispatch({
+              type: 'Login',
+              accessToken: false,
+              refreshToken: false,
+            });
+          }
         if (response.ok) {
           setState({
             ...state,
