@@ -5,17 +5,28 @@ const defaulttokens = {
   refreshToken: localStorage.getItem('refresh-token') || false,
   user: '',
   posts: [],
+  search: {},
 };
 
 const reducer = (state = defaulttokens, action) => {
+  const {
+    accessToken,
+    refreshToken,
+    user,
+    posts,
+    model,
+    field,
+    match,
+    list,
+  } = action;
   switch (action.type) {
     case 'Login':
     case 'Register':
       return {
         ...state,
-        accessToken: action.accessToken,
-        refreshToken: action.refreshToken,
-        user: action.user,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        user: user,
       };
     case 'Logout':
       localStorage.removeItem('access-token');
@@ -23,14 +34,18 @@ const reducer = (state = defaulttokens, action) => {
       console.log(state, action);
       return {
         ...state,
-        accessToken: action.accessToken,
-        refreshToken: action.refreshToken,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       };
     case 'updatePost':
       return {
         ...state,
-        posts: action.posts,
+        posts: posts,
       };
+    case 'search:change':
+      return { ...state, search: { model, field, match } };
+    case 'search:results':
+      return { ...state, search: { list, model, field, match } };
     default:
       return state;
   }
@@ -41,6 +56,7 @@ export const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
+//on refresh to remain login
 store.subscribe(() => {
   const state = store.getState();
   if (

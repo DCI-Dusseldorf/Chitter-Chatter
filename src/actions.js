@@ -45,3 +45,25 @@ export const deletePost = async (postId) => {
   });
   updatePosts();
 };
+
+export const search = async (match, type = 'User', field = 'name') => {
+  console.log(match, type);
+  const response = await fetch(`/api/search/`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: store.getState().accessToken,
+    },
+    body: JSON.stringify({ match, type, field }),
+  });
+  const data = await response.json();
+  console.log(response);
+  if (response.ok)
+    store.dispatch({
+      type: 'search:results',
+      list: data,
+      match,
+      model: type,
+      field,
+    });
+};
