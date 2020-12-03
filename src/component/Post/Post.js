@@ -12,6 +12,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
+import SendIcon from '@material-ui/icons/Send';
 import { red } from '@material-ui/core/colors';
 import { commentPost, deletePost, editPost, likePost } from '../../actions';
 import { Box, Button, Menu, MenuItem, TextField } from '@material-ui/core';
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(0.3),
+  },
+  boxIconButtons: {
+    marginTop: theme.spacing(-3)
   }
 }));
 
@@ -46,6 +50,8 @@ export default function Post(props) {
   const [state, setState] = useState({
     editedMessage: post.message,
     editMode: false,
+    commentMessage: '',
+    commentMode: false,
     reaction: '',
   });
 
@@ -94,14 +100,14 @@ export default function Post(props) {
           subheader={moment(post.createdAt).fromNow()}
         />
         <CardContent>
-          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
-          <Box display={ (state.editMode) ? 'none' : '' }>
-            <Typography variant='body2' color='textSecondary'>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
+          <Box display={ state.editMode ? 'none' : '' }>
+            <Typography variant='body1' color='textSecondary'>
               {post.message}
             </Typography>
           </Box>
-          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
-          <Box display={ (state.editMode) ? '' : 'none' }>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
+          <Box display={ state.editMode ? '' : 'none' }>
             <TextField
               multiline
               rows={3}
@@ -111,6 +117,41 @@ export default function Post(props) {
                 setState({ ...state, editedMessage: e.target.value })
               }
             />
+          </Box>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv     hide -> show */}
+          <Box display={ state.commentMode ? '' : 'none' } mt={1}>
+            <TextField
+              label='Comment'
+              multiline
+              rows={2}
+              variant='outlined'
+              value={state.commentMessage}
+              onChange={(e) =>
+                setState({ ...state, commentMessage: e.target.value })
+              }
+            />
+          </Box>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv     hide -> show */}
+          <Box display={ state.commentMode ? '' : 'none' } textAlign='end'>
+            <IconButton className={classes.boxIconButtons}>
+              <SendIcon
+                color='primary'
+                onClick={(e) => {
+                  e.preventDefault();
+                  commentPost(post.id, state.commentMessage);
+                  setState({ ...state, commentMode: false, commentMessage: '' });
+                }}
+              />
+            </IconButton>
+            <IconButton className={classes.boxIconButtons}>
+              <ClearIcon
+                color='secondary'
+                onClick={(e) => {
+                  e.preventDefault();
+                  setState({ ...state, commentMode: false, commentMessage: '' });
+                }}
+              />
+            </IconButton>
           </Box>
         </CardContent>
         <CardActions disableSpacing>
@@ -126,12 +167,13 @@ export default function Post(props) {
           <IconButton aria-label='share'>
             <CommentIcon
               onClick={(e) => {
-                commentPost(post.id);
+                e.preventDefault();
+                setState({ ...state, commentMode: true });
               }}
             />
           </IconButton>
-          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
-          <Box display={ (state.editMode) ? '' : 'none' }>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
+          <Box display={ state.editMode ? '' : 'none' }>
             <Button
               className={classes.button}
               variant='contained'
