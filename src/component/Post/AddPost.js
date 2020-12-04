@@ -38,7 +38,7 @@ function Addpost(props) {
         <div>
           <TextField
             id='outlined-multiline-static'
-            label='Multiline'
+            label='Add a post'
             multiline
             rows={4}
             value={state.message}

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
@@ -11,23 +10,28 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
+import SendIcon from '@material-ui/icons/Send';
 import { red } from '@material-ui/core/colors';
 import { commentPost, deletePost, editPost, likePost } from '../../actions';
 import { Box, Button, Menu, MenuItem, TextField } from '@material-ui/core';
 var moment = require('moment');
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
-    marginBottom: '10px',
-  },
-  media: {
-    height: 0,
-    // paddingTop: '56.25%', // 16:9
+    marginBottom: theme.spacing(1),
   },
   avatar: {
     backgroundColor: red[500],
   },
+  button: {
+    margin: theme.spacing(0.3),
+  },
+  boxIconButtons: {
+    marginTop: theme.spacing(-3)
+  }
 }));
 
 export default function Post(props) {
@@ -45,8 +49,9 @@ export default function Post(props) {
 
   const [state, setState] = useState({
     editedMessage: post.message,
-    editModeOff: '',
-    editModeOn: 'none',
+    editMode: false,
+    commentMessage: '',
+    commentMode: false,
     reaction: '',
   });
 
@@ -75,7 +80,7 @@ export default function Post(props) {
                   onClick={(e) => {
                     e.preventDefault();
                     handleClose();
-                    setState({ ...state, editModeOn: '', editModeOff: 'none' });
+                    setState({ ...state, editMode: true });
                   }}
                 >
                   Edit
@@ -95,17 +100,15 @@ export default function Post(props) {
           subheader={moment(post.createdAt).fromNow()}
         />
         <CardContent>
-          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
-          <Box display={state.editModeOff}>
-            <Typography variant='body2' color='textSecondary'>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
+          <Box display={ state.editMode ? 'none' : '' }>
+            <Typography variant='body1' color='textSecondary'>
               {post.message}
             </Typography>
           </Box>
-          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvv         hide -> show */}
-          <Box display={state.editModeOn}>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
+          <Box display={ state.editMode ? '' : 'none' }>
             <TextField
-              // component={Box}
-              // display={state.editModeOn}
               multiline
               rows={3}
               variant='outlined'
@@ -115,12 +118,42 @@ export default function Post(props) {
               }
             />
           </Box>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv     hide -> show */}
+          <Box display={ state.commentMode ? '' : 'none' } mt={1}>
+            <TextField
+              label='Comment'
+              multiline
+              rows={2}
+              variant='outlined'
+              value={state.commentMessage}
+              onChange={(e) =>
+                setState({ ...state, commentMessage: e.target.value })
+              }
+            />
+          </Box>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv     hide -> show */}
+          <Box display={ state.commentMode ? '' : 'none' } textAlign='end'>
+            <IconButton className={classes.boxIconButtons}>
+              <SendIcon
+                color='primary'
+                onClick={(e) => {
+                  e.preventDefault();
+                  commentPost(post.id, state.commentMessage);
+                  setState({ ...state, commentMode: false, commentMessage: '' });
+                }}
+              />
+            </IconButton>
+            <IconButton className={classes.boxIconButtons}>
+              <ClearIcon
+                color='secondary'
+                onClick={(e) => {
+                  e.preventDefault();
+                  setState({ ...state, commentMode: false, commentMessage: '' });
+                }}
+              />
+            </IconButton>
+          </Box>
         </CardContent>
-        <CardMedia
-          className={classes.media}
-          image='/static/images/cards/paella.jpg'
-          title='my pic'
-        />
         <CardActions disableSpacing>
           <IconButton aria-label='add to favorites'>
             <FavoriteIcon
@@ -134,22 +167,39 @@ export default function Post(props) {
           <IconButton aria-label='share'>
             <CommentIcon
               onClick={(e) => {
-                commentPost(post.id);
+                e.preventDefault();
+                setState({ ...state, commentMode: true });
               }}
             />
           </IconButton>
-          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvv         hide -> show */}
-          <Box display={state.editModeOn}>
+          {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
+          <Box display={ state.editMode ? '' : 'none' }>
             <Button
+              className={classes.button}
               variant='contained'
               color='primary'
+              size='small'
+              startIcon={<SaveIcon />}
               onClick={(e) => {
                 e.preventDefault();
                 editPost(post.id, state.editedMessage);
-                setState({ ...state, editModeOn: 'none', editModeOff: '' });
+                setState({ ...state, editMode: false });
               }}
             >
               Save
+            </Button>
+            <Button
+              className={classes.button}
+              variant='contained'
+              color='secondary'
+              size='small'
+              startIcon={<ClearIcon />}
+              onClick={(e) => {
+                e.preventDefault();
+                setState({ ...state, editMode: false, editedMessage: post.message });
+              }}
+            >
+              Cancel
             </Button>
           </Box>
         </CardActions>
