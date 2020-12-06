@@ -36,7 +36,7 @@ export const removeReactPost = async (postId, reaction) => {
   console.log(response);
 };
 
-export const commentPost = async (postId, message = 'hello') => {
+export const commentPost = async (postId, message) => {
   const response = await fetch(`/api/post/${postId}`, {
     method: 'POST',
     headers: {
@@ -46,6 +46,9 @@ export const commentPost = async (postId, message = 'hello') => {
     body: JSON.stringify({ message: message }),
   });
   console.log(response);
+  const result = await response.json();
+  console.log(result);
+  updatePosts();
 };
 
 export const editPost = async (postId, message) => {

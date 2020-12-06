@@ -20,6 +20,7 @@
   top: 0px;
   left: -100%;
   transition: 850ms;
+  z-index: 1;
 }
 .nav-menu.active {
   left: 0;
@@ -57,7 +58,7 @@
   display: flex;
   align-items: center;
 }
-span {
+.sideNavItem {
   margin-left: 16px;
 }
 .logoNav {
