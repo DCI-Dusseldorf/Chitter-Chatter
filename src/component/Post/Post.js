@@ -54,11 +54,13 @@ const useStyles = makeStyles((theme) => ({
   popperIcon: {
     marginLeft: '10px',
   },
+  icons: {
+    marginLeft: '-10px',
+  },
 }));
 
 export default function Post(props) {
   const { post } = props;
-  console.log(post.yourReactions);
   if (!post.yourReactions) {
     post.yourReactions = {};
   }
@@ -182,13 +184,6 @@ export default function Post(props) {
             onClick={(e) => {
               e.preventDefault();
               handleClickPopper('top-start', e);
-              // if (state.reaction === null || state.reaction === 'Hate') {
-              //   setState({ ...state, reaction: 'Like' });
-              //   reactPost(post.id, state.reaction);
-              // } else if (state.reaction === 'Like') {
-              //   setState({ ...state, reaction: 'Hate' });
-              //   reactPost(post.id, state.reaction);
-              // } else return;
             }}
           >
             <Popper
@@ -241,12 +236,42 @@ export default function Post(props) {
                 </Fade>
               )}
             </Popper>
-            <FavoriteIcon
-            // className={
-            //   state.reaction === 'Like'
-            //     ? classes.favoriteIconred
-            //     : classes.favoriteIcongrey
-            // }
+            {/* <FavoriteIcon
+            /> */}
+            <AiFillLike
+              className={classes.icons}
+              color='blue'
+              display={!state.reaction.Like ? 'none' : ''}
+            />
+            <AiFillDislike
+              className={classes.icons}
+              color='red'
+              display={!state.reaction.Hate ? 'none' : ''}
+            />
+            <FiFrown
+              className={classes.icons}
+              color='orange'
+              display={!state.reaction.Frown ? 'none' : ''}
+            />
+            <BiAngry
+              className={classes.icons}
+              color='red'
+              display={!state.reaction.Angry ? 'none' : ''}
+            />
+            <FaLaugh
+              className={classes.icons}
+              color='yellow'
+              display={!state.reaction.Lol ? 'none' : ''}
+            />
+            <FaGrinSquintTears
+              className={classes.icons}
+              color='yellow'
+              display={!state.reaction.Rofl ? 'none' : ''}
+            />
+            <AiFillHeart
+              className={classes.icons}
+              color='red'
+              display={!state.reaction.Love ? 'none' : ''}
             />
           </IconButton>
           <IconButton aria-label='share'>
