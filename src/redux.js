@@ -31,7 +31,6 @@ const reducer = (state = defaulttokens, action) => {
     case 'Logout':
       localStorage.removeItem('access-token');
       localStorage.removeItem('refresh-token');
-      console.log(state, action);
       return {
         ...state,
         accessToken: accessToken,

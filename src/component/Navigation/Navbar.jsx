@@ -27,7 +27,10 @@ import Search from '../Search/Search';
 
 export default function Navbar() {
   const [sidebar, setSidebar] = useState(false);
-  const refreshToken = useSelector((state) => state.refreshToken);
+  const refreshToken = useSelector((state) =>  state.refreshToken);
+  const accessToken = useSelector((state) =>  state.accessToken);
+  const user = useSelector((state)=>state.user)
+  console.log(user.id);
   const history=useHistory();
   const dispatch = useDispatch();
  
@@ -67,6 +70,17 @@ export default function Navbar() {
     handleMobileMenuClose();
     history.push('/login');
   };
+  const submitUnregister = async() =>{
+    const response = await fetch(`/api/user/${user.id}`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({ refreshToken: refreshToken }),
+    });
+    console.log(response);
+  }
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -83,7 +97,7 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={()=>{submitUnregister();handleMenuClose();}}>Unregister</MenuItem>
       <MenuItem onClick={(e) => submitLogout()}>Logout</MenuItem>
     </Menu>
   );
@@ -115,12 +129,13 @@ export default function Navbar() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem >
         <IconButton
           aria-label='account of current user'
           aria-controls='primary-search-account-menu'
           aria-haspopup='true'
           color='inherit'
+          onClick={handleProfileMenuOpen}
         >
           <AccountCircle />
         </IconButton>
