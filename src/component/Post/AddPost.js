@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { Button, Card, CardActions, CardHeader } from '@material-ui/core';
 import { useState } from 'react';
 import { updatePosts } from '../../actions';
+import { DropzoneDialog } from 'material-ui-dropzone';
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: theme.spacing(5, 20),
@@ -17,18 +18,40 @@ const useStyles = makeStyles((theme) => ({
 
 function Addpost(props) {
   const classes = useStyles();
-  const [state, setState] = useState({ message: '' });
-
-  function addPost(message) {
+  const [state, setState] = useState({ open: false, message: '', images: [] });
+  console.log(state.images);
+  function addPost(message, images) {
     fetch('/api/post/', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         Authorization: props.token,
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, images }),
     }).then((response) => updatePosts());
-    setState({ message: '' });
+    setState({ ...state, message: '' });
+  }
+  function handleClose() {
+    setState({ ...state, open: false });
+  }
+
+  function handleSave(images) {
+    //Saving files to state for further use and closing Modal.
+    const reader = new FileReader();
+    if (images[0]) {
+      reader.readAsDataURL(images[0]);
+    }
+    reader.addEventListener(
+      'load',
+      function () {
+        setState({ ...state, images: [reader.result], open: false });
+      },
+      false
+    );
+  }
+
+  function handleOpen() {
+    setState({ ...state, open: true });
   }
 
   return (
@@ -52,11 +75,26 @@ function Addpost(props) {
             color='primary'
             onClick={(e) => {
               e.preventDefault();
-              addPost(state.message);
+              addPost(state.message, state.images);
             }}
           >
             Post
           </Button>
+          <Button
+            onClick={(e) => {
+              setState({ ...state, open: true });
+            }}
+          >
+            Add image
+          </Button>
+          <DropzoneDialog
+            open={state.open}
+            onSave={handleSave}
+            acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+            showPreviews={true}
+            maxFileSize={5000000}
+            onClose={handleClose}
+          />
         </CardActions>
       </form>
     </Card>
