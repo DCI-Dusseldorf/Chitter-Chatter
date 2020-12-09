@@ -4,10 +4,11 @@ import Navbar from './component/Navigation/Navbar';
 import Login from './component/Authorisation/Login/Login';
 import Register from './component/Authorisation/Register/Register';
 import Newsfeed from './Pages/Newsfeed';
-import Profile from './Pages/Profile';
+import Profile from './Pages/profile/Profile';
 import FriendsLists from './Pages/FriendsLists';
 import Chat from './Pages/Chat';
 import Birthday from './Pages/Birthday';
+import UserProfile from './Pages/profile/UserProfile';
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         <Switch>
           <Route path='/login' component={Login} />
           <Route path='/chitter' component={Register} />
-          <Route path='/profile/:userId?' component={Profile} />
+          <Route path='/profile' component={Profile} />
+          <Route path='/userprofile/:userId?' component={UserProfile} />
           <Route path='/friendsLists' component={FriendsLists} />
           <Route path='/chat' component={Chat} />
           <Route path='/birthday' component={Birthday} />

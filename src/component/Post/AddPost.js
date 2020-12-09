@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 function Addpost(props) {
   const classes = useStyles();
   const [state, setState] = useState({ open: false, message: '', images: [] });
-  console.log(state.images);
   function addPost(message, images) {
     fetch('/api/post/', {
       method: 'POST',

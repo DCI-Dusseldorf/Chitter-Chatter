@@ -30,7 +30,6 @@ export default function Navbar() {
   const refreshToken = useSelector((state) =>  state.refreshToken);
   const accessToken = useSelector((state) =>  state.accessToken);
   const user = useSelector((state)=>state.user)
-  console.log(user.id);
   const history=useHistory();
   const dispatch = useDispatch();
  
@@ -55,23 +54,23 @@ export default function Navbar() {
     handleMobileMenuClose();
   };
   const submitLogout = async () => {
-    const response = await fetch('/api/auth/logout', {
+    await fetch('/api/auth/logout', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ refreshToken: refreshToken }),
     });
-    console.log(response);
     dispatch({
       type: 'Logout',
       accessToken: false,
       refreshToken: false,
+      user:{},
     });
     setAnchorEl(null);
     handleMobileMenuClose();
     history.push('/login');
   };
   const submitUnregister = async() =>{
-    const response = await fetch(`/api/user/${user.id}`, {
+    await fetch(`/api/user/${user.id}`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',
@@ -79,7 +78,6 @@ export default function Navbar() {
       },
       body: JSON.stringify({ refreshToken: refreshToken }),
     });
-    console.log(response);
   }
 
   const handleMobileMenuOpen = (event) => {
@@ -98,6 +96,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={()=>{submitUnregister();handleMenuClose();}}>Unregister</MenuItem>
+      <MenuItem >Profile</MenuItem>
       <MenuItem onClick={(e) => submitLogout()}>Logout</MenuItem>
     </Menu>
   );
@@ -137,7 +136,9 @@ export default function Navbar() {
           color='inherit'
           onClick={handleProfileMenuOpen}
         >
+          <Link to='/profile'>
           <AccountCircle />
+          </Link>
         </IconButton>
         <p>Profile</p>
       </MenuItem>

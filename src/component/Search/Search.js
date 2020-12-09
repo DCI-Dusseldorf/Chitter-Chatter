@@ -13,7 +13,7 @@ function Search() {
   const { list } = useSelector((state) => state.search);
   const change = (e) => search(e.target.value);
   const select = (e, v, r) => {
-    if (r === 'select-option') history.push(`/profile/${v.id}`);
+    if (r === 'select-option') history.push(`/userprofile/${v.id}`);
   };
   return (
     <Autocomplete
