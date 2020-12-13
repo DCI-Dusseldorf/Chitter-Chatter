@@ -29,6 +29,7 @@ import { AiFillLike, AiFillDislike, AiFillHeart } from 'react-icons/ai';
 import { BiAngry } from 'react-icons/bi';
 import { FiFrown } from 'react-icons/fi';
 import { FaGrinSquintTears, FaLaugh } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 var moment = require('moment');
 
 const useStyles = makeStyles((theme) => ({
@@ -60,8 +61,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0.3),
   },
   boxIconButtons: {
-    marginTop: theme.spacing(-3)
-  }
+    marginTop: theme.spacing(-3),
+  },
 }));
 
 export default function Post(props) {
@@ -69,6 +70,7 @@ export default function Post(props) {
   if (!post.yourReactions) {
     post.yourReactions = {};
   }
+  const user = useSelector((state) => state.user);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorElPopper, setAnchorElPopper] = React.useState(null);
@@ -90,8 +92,8 @@ export default function Post(props) {
 
   const [state, setState] = useState({
     editedMessage: post.message,
-     editMode: false,
-      commentMessage: '',
+    editMode: false,
+    commentMessage: '',
     commentMode: false,
     reaction: {
       Like: post.yourReactions.Like || false,
@@ -101,7 +103,7 @@ export default function Post(props) {
       Lol: post.yourReactions.Lol || false,
       Rofl: post.yourReactions.Rofl || false,
       Love: post.yourReactions.Love || false,
-    },  
+    },
   });
   function setReaction(reaction) {
     !state.reaction[reaction]
@@ -118,8 +120,12 @@ export default function Post(props) {
       <Card className={classes.root}>
         <CardHeader
           avatar={
-            <Avatar aria-label='recipe' className={classes.avatar}>
-              R
+            <Avatar
+              src={user.avatar}
+              aria-label='recipe'
+              className={classes.avatar}
+            >
+              {user.name.substring(0, 1)}
             </Avatar>
           }
           action={
@@ -159,13 +165,13 @@ export default function Post(props) {
         />
         <CardContent>
           {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        show -> hide */}
-          <Box display={ state.editMode ? 'none' : '' }>
+          <Box display={state.editMode ? 'none' : ''}>
             <Typography variant='body1' color='textSecondary'>
               {post.message}
             </Typography>
           </Box>
           {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
-          <Box display={ state.editMode ? '' : 'none' }>
+          <Box display={state.editMode ? '' : 'none'}>
             <TextField
               multiline
               rows={3}
@@ -177,7 +183,7 @@ export default function Post(props) {
             />
           </Box>
           {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv     hide -> show */}
-          <Box display={ state.commentMode ? '' : 'none' } mt={1}>
+          <Box display={state.commentMode ? '' : 'none'} mt={1}>
             <TextField
               label='Comment'
               multiline
@@ -190,14 +196,18 @@ export default function Post(props) {
             />
           </Box>
           {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv     hide -> show */}
-          <Box display={ state.commentMode ? '' : 'none' } textAlign='end'>
+          <Box display={state.commentMode ? '' : 'none'} textAlign='end'>
             <IconButton className={classes.boxIconButtons}>
               <SendIcon
                 color='primary'
                 onClick={(e) => {
                   e.preventDefault();
                   commentPost(post.id, state.commentMessage);
-                  setState({ ...state, commentMode: false, commentMessage: '' });
+                  setState({
+                    ...state,
+                    commentMode: false,
+                    commentMessage: '',
+                  });
                 }}
               />
             </IconButton>
@@ -206,7 +216,11 @@ export default function Post(props) {
                 color='secondary'
                 onClick={(e) => {
                   e.preventDefault();
-                  setState({ ...state, commentMode: false, commentMessage: '' });
+                  setState({
+                    ...state,
+                    commentMode: false,
+                    commentMessage: '',
+                  });
                 }}
               />
             </IconButton>
@@ -274,8 +288,7 @@ export default function Post(props) {
             /> */}
             <AiFillLike
               className={classes.icons}
-              color='blue'
-              display={!state.reaction.Like ? 'none' : ''}
+              color={!state.reaction.Like ? '' : 'blue'}
             />
             <AiFillDislike
               className={classes.icons}
@@ -317,7 +330,7 @@ export default function Post(props) {
             />
           </IconButton>
           {/*  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv        hide -> show */}
-          <Box display={ state.editMode ? '' : 'none' }>
+          <Box display={state.editMode ? '' : 'none'}>
             <Button
               className={classes.button}
               variant='contained'
@@ -340,7 +353,11 @@ export default function Post(props) {
               startIcon={<ClearIcon />}
               onClick={(e) => {
                 e.preventDefault();
-                setState({ ...state, editMode: false, editedMessage: post.message });
+                setState({
+                  ...state,
+                  editMode: false,
+                  editedMessage: post.message,
+                });
               }}
             >
               Cancel

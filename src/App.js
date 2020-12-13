@@ -5,7 +5,7 @@ import Login from './component/Authorisation/Login/Login';
 import Register from './component/Authorisation/Register/Register';
 import Newsfeed from './Pages/Newsfeed';
 import Profile from './Pages/profile/Profile';
-import FriendsLists from './Pages/FriendsLists';
+import FriendsLists from './Pages/friends/FriendsLists';
 import Chat from './Pages/Chat';
 import Birthday from './Pages/Birthday';
 import UserProfile from './Pages/profile/UserProfile';

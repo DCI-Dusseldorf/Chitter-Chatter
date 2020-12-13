@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import { store } from './redux';
 
 export const updatePosts = async () => {
@@ -86,5 +87,16 @@ export const search = async (match, type = 'User', field = 'name') => {
       match,
       model: type,
       field,
+    });
+};
+
+export const getFriendsProfiles = (arrayOfUserIds) => {
+  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
+    .then((arrayOfResponses) =>
+      arrayOfResponses.map((response) => response.data)
+    )
+    .then((arrayOfData) => {
+      console.log(arrayOfData);
+      store.dispatch({ type: 'friends:Profiles', friends: arrayOfData });
     });
 };

@@ -1,72 +1,13 @@
-import { Avatar, withStyles } from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Badge from '@material-ui/core/Badge';
-
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { useSelector } from 'react-redux';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    position: 'relative',
-  },
-  paper: {
-    position: 'relative',
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    height: '300px',
-    color: theme.palette.text.secondary,
-    background:
-      'linear-gradient(90deg, rgba(255,227,195,1) 50%, rgba(190,212,225,1) 50%)',
-  },
-  large: {
-    width: theme.spacing(18),
-    height: theme.spacing(18),
-  },
-  dot: {
-    position: 'absolute',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
-  icons: {
-    display: 'flex',
-    position: 'absolute',
-    right: '10px',
-    bottom: '10px',
-  },
-}));
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    backgroundColor: '#44b700',
-    color: '#44b700',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: '$ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
-      content: '""',
-    },
-  },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
-      opacity: 1,
-    },
-    '100%': {
-      transform: 'scale(2.4)',
-      opacity: 0,
-    },
-  },
-}))(Badge);
+import { useStyles } from './profileStyle';
+import { StyledBadge } from './styledBadgeAvatar';
+import Axios from 'axios';
 
 function UserProfile() {
   const classes = useStyles();
@@ -74,7 +15,7 @@ function UserProfile() {
   let { userId } = useParams();
 
   const [searchedUser, setSearchedUser] = useState({});
-
+  const [toggleFriend, setToggleFriend] = useState(false);
   useEffect(() => {
     fetch('/api/user/' + userId, {
       headers: {
@@ -86,6 +27,44 @@ function UserProfile() {
       .then((userinfo) => setSearchedUser(userinfo));
   }, [userId]);
 
+  function changeFriend() {
+    if (toggleFriend === false) {
+      setToggleFriend(true);
+      addFriend();
+    } else if (toggleFriend === true) {
+      setToggleFriend(false);
+      removeFriend();
+    }
+  }
+  async function addFriend() {
+    console.log(userId);
+    const response = fetch(`/api/friends/approve`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        id: userId,
+      }),
+    });
+    // const response = await Axios.post(`/api/friends/approve`, { id: userId });
+    // console.log(response);
+    // if (response.ok) await Axios.get(`/user/${userId}`);
+  }
+  function removeFriend() {
+    const response = fetch(`/api/friends/reject`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        id: userId,
+      }),
+    });
+  }
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3} justify='center'>
@@ -95,7 +74,14 @@ function UserProfile() {
             <br />
             {searchedUser.email}
             <div className={classes.icons}>
-              <Avatar>
+              <Avatar
+                onClick={(e) => {
+                  changeFriend(userId);
+                }}
+                className={
+                  toggleFriend ? classes.addFriend : classes.removeFriend
+                }
+              >
                 <PersonAddIcon />
               </Avatar>
             </div>
@@ -109,7 +95,10 @@ function UserProfile() {
             }}
             variant='dot'
           >
-            <Avatar src={searchedUser.avatar} className={classes.large} />
+            <Avatar
+              src={searchedUser.avatar}
+              className={classes.large}
+            ></Avatar>
           </StyledBadge>
         </Grid>
       </Grid>

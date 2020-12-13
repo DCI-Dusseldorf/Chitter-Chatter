@@ -8,6 +8,7 @@ const defaulttokens = {
   user: JSON.parse(localStorage.getItem('myUser')) || {},
   posts: [],
   search: {},
+  friends: {},
 };
 
 const reducer = (state = defaulttokens, action) => {
@@ -21,6 +22,7 @@ const reducer = (state = defaulttokens, action) => {
     match,
     list,
     avatar,
+    friends,
   } = action;
   switch (action.type) {
     case 'Login':
@@ -54,6 +56,8 @@ const reducer = (state = defaulttokens, action) => {
       return { ...state, search: { list, model, field, match } };
     case 'user:avatar':
       return { ...state, user: { ...state.user, avatar } };
+    case 'friends:Profiles':
+      return { ...state, friends: friends };
     default:
       return state;
   }
