@@ -9,7 +9,7 @@ import { useStyles } from './friendsStyle';
 
 function FriendsLists() {
   const classes = useStyles();
-  const friendsIds = useSelector((state) => state.user.friendRequestsSent);
+  const friendsIds = useSelector((state) => state.user.friends);
   const friends = useSelector((state) => state.friends);
   console.log(friends);
   useEffect(() => getFriendsProfiles(friendsIds), []);

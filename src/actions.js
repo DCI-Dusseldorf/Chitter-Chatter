@@ -91,7 +91,7 @@ export const search = async (match, type = 'User', field = 'name') => {
 };
 
 export const getFriendsProfiles = (arrayOfUserIds) => {
-  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
+  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id.id}`)))
     .then((arrayOfResponses) =>
       arrayOfResponses.map((response) => response.data)
     )

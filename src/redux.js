@@ -8,7 +8,7 @@ const defaulttokens = {
   user: JSON.parse(localStorage.getItem('myUser')) || {},
   posts: [],
   search: {},
-  friends: {},
+  friends: [],
 };
 
 const reducer = (state = defaulttokens, action) => {
