@@ -3,14 +3,15 @@ import Axios from 'axios';
 const { createStore } = require('redux');
 
 const defaulttokens = {
-  accessToken: localStorage.getItem('access-token') || false,
-  refreshToken: localStorage.getItem('refresh-token') || false,
+  accessToken: JSON.parse(localStorage.getItem('access-token') || 'false'),
+  refreshToken: JSON.parse(localStorage.getItem('refresh-token') || 'false'),
   user: JSON.parse(localStorage.getItem('myUser')) || {},
   posts: [],
   search: {},
-  friends: {},
+  friends: [],
 };
-
+if (defaulttokens.accessToken)
+  Axios.defaults.headers.common.Authorization = defaulttokens.accessToken;
 const reducer = (state = defaulttokens, action) => {
   const {
     accessToken,

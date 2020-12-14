@@ -59,6 +59,7 @@ export default function Navbar() {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ refreshToken: refreshToken }),
     });
+    history.push('/login');
     dispatch({
       type: 'Logout',
       accessToken: false,
@@ -67,7 +68,6 @@ export default function Navbar() {
     });
     setAnchorEl(null);
     handleMobileMenuClose();
-    history.push('/login');
   };
   const submitUnregister = async() =>{
     await fetch(`/api/user/${user.id}`, {

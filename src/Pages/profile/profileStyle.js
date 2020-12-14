@@ -4,6 +4,11 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  rootTabs: {
+    flexGrow: 1,
+    marginTop: '60px',
+    maxWidth: 500,
+  },
   paper: {
     position: 'relative',
     padding: theme.spacing(2),

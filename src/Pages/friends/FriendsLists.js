@@ -9,16 +9,14 @@ import { useStyles } from './friendsStyle';
 
 function FriendsLists() {
   const classes = useStyles();
-  const friendsIds = useSelector((state) => state.user.friendRequestsSent);
+  const friendsIds = useSelector((state) => state.user.friends);
+  useEffect(() => getFriendsProfiles(friendsIds), [friendsIds]);
   const friends = useSelector((state) => state.friends);
-  console.log(friends);
-  useEffect(() => getFriendsProfiles(friendsIds), []);
   return (
     <>
-      {' '}
       <Box width='75%' className={classes.box}>
         F.R.I.E.N.D.S
-      </Box>{' '}
+      </Box>
       {!friends
         ? `...loading ${friends.id}`
         : friends.map((friend) => <FriendsProfile friends={friend} />)}

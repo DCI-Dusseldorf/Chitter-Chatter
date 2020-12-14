@@ -114,7 +114,7 @@ export default function Post(props) {
       reaction: { ...state.reaction, [reaction]: !state.reaction[reaction] },
     });
   }
-
+  console.log(user);
   return (
     <>
       <Card className={classes.root}>
