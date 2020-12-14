@@ -4,12 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
 import EditIcon from '@material-ui/icons/Edit';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Axios from 'axios';
 import { useStyles } from './profileStyle';
 import { StyledBadge } from './styledBadgeAvatar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import * as FaIcons from 'react-icons/fa';
+import * as HiIcons from 'react-icons/hi';
+import PhotoIcon from '@material-ui/icons/Photo';
+import PeopleIcon from '@material-ui/icons/People';
 
 function Profile() {
   const classes = useStyles();
@@ -18,6 +23,11 @@ function Profile() {
   const { accessToken, user: myUser } = useSelector((state) => state);
   const avatar = useSelector((state) => state.user.avatar);
   const [searchedUser, setSearchedUser] = useState({});
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   if (!userId) {
     userId = myUser.id;
   }
@@ -85,6 +95,23 @@ function Profile() {
             <Avatar src={avatar} className={classes.large} />
           </StyledBadge>
         </Grid>
+        <Paper square className={classes.rootTabs}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            variant='fullWidth'
+            indicatorColor='secondary'
+            textColor='secondary'
+            aria-label='icon label tabs example'
+          >
+            <Tab
+              icon={<FaIcons.FaRegNewspaper size='30px' />}
+              label='Timeline'
+            />
+            <Tab icon={<PeopleIcon />} label='Friends' />
+            <Tab icon={<PhotoIcon />} label='Photos' />
+          </Tabs>
+        </Paper>
       </Grid>
     </div>
   );
