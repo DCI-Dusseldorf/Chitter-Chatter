@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "axios": "^0.21.0",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",
     "react": "^17.0.1",
@@ -21,7 +22,7 @@
     "web-vitals": "^0.2.4"
   },
   "homepage": "https://sz.hktr.de/chitter/",
-  "proxy": "https://sz.hktr.de/",
+  "proxy":"http://danyloveselyi.me:3000",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "cd build && scp -r * chitter@sz.hktr.de: ",

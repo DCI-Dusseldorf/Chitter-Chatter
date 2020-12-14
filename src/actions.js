@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import { store } from './redux';
 
 export const updatePosts = async () => {
@@ -13,7 +14,6 @@ export const updatePosts = async () => {
 };
 
 export const reactPost = async (postId, reaction) => {
-  console.log(reaction);
   const response = await fetch(`/api/like/post/${postId}/${reaction}`, {
     method: 'PUT',
     headers: {
@@ -22,18 +22,15 @@ export const reactPost = async (postId, reaction) => {
     },
   });
   const result = await response.json();
-  console.log(result);
 };
 export const removeReactPost = async (postId, reaction) => {
-  console.log(reaction);
-  const response = await fetch(`/api/like/post/${postId}/${reaction}`, {
+  await fetch(`/api/like/post/${postId}/${reaction}`, {
     method: 'DELETE',
     headers: {
       'content-type': 'application/json',
       Authorization: store.getState().accessToken,
     },
   });
-  console.log(response);
 };
 
 export const commentPost = async (postId, message) => {
@@ -45,7 +42,6 @@ export const commentPost = async (postId, message) => {
     },
     body: JSON.stringify({ message: message }),
   });
-  console.log(response);
   const result = await response.json();
   console.log(result);
   updatePosts();
@@ -75,7 +71,6 @@ export const deletePost = async (postId) => {
 };
 
 export const search = async (match, type = 'User', field = 'name') => {
-  console.log(match, type);
   const response = await fetch(`/api/search/`, {
     method: 'POST',
     headers: {
@@ -85,7 +80,6 @@ export const search = async (match, type = 'User', field = 'name') => {
     body: JSON.stringify({ match, type, field }),
   });
   const data = await response.json();
-  console.log(response);
   if (response.ok)
     store.dispatch({
       type: 'search:results',
@@ -93,5 +87,16 @@ export const search = async (match, type = 'User', field = 'name') => {
       match,
       model: type,
       field,
+    });
+};
+
+export const getFriendsProfiles = (arrayOfUserIds) => {
+  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
+    .then((arrayOfResponses) =>
+      arrayOfResponses.map((response) => response.data)
+    )
+    .then((arrayOfData) => {
+      console.log(arrayOfData);
+      store.dispatch({ type: 'friends:Profiles', friends: arrayOfData });
     });
 };

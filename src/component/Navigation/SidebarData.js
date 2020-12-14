@@ -1,7 +1,6 @@
 import React from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as HiIcons from 'react-icons/hi';
-
 export const SidebarData = [
   {
     title: 'Newsfeed',
@@ -11,7 +10,7 @@ export const SidebarData = [
   },
   {
     title: 'Profile',
-    path: '/profile',
+    path: '/profile/',
     icon: <HiIcons.HiUser />,
     cName: 'nav-text',
   },
