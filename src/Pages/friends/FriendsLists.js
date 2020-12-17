@@ -9,9 +9,9 @@ import { useStyles } from './friendsStyle';
 
 function FriendsLists() {
   const classes = useStyles();
-  const friendsIds = useSelector((state) => state.user.friends);
+  const friendsIds = useSelector((state) => state.auth.user.friends);
   useEffect(() => getFriendsProfiles(friendsIds), [friendsIds]);
-  const friends = useSelector((state) => state.friends);
+  const friends = useSelector((state) => state.auth.friends);
   return (
     <>
       <Box width='75%' className={classes.box}>

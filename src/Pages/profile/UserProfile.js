@@ -7,11 +7,10 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { useSelector } from 'react-redux';
 import { useStyles } from './profileStyle';
 import { StyledBadge } from './styledBadgeAvatar';
-import Axios from 'axios';
 
 function UserProfile() {
   const classes = useStyles();
-  const { accessToken } = useSelector((state) => state);
+  const { accessToken } = useSelector((state) => state.auth);
   let { userId } = useParams();
 
   const [searchedUser, setSearchedUser] = useState({});

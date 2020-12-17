@@ -10,7 +10,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SaveIcon from '@material-ui/icons/Save';
@@ -29,7 +28,7 @@ import { AiFillLike, AiFillDislike, AiFillHeart } from 'react-icons/ai';
 import { BiAngry } from 'react-icons/bi';
 import { FiFrown } from 'react-icons/fi';
 import { FaGrinSquintTears, FaLaugh } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { useUser } from '../Data/hooks';
 var moment = require('moment');
 
 const useStyles = makeStyles((theme) => ({
@@ -67,10 +66,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Post(props) {
   const { post } = props;
+  const author = useUser(post.author);
   if (!post.yourReactions) {
     post.yourReactions = {};
   }
-  const user = useSelector((state) => state.user);
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorElPopper, setAnchorElPopper] = React.useState(null);
@@ -114,18 +114,17 @@ export default function Post(props) {
       reaction: { ...state.reaction, [reaction]: !state.reaction[reaction] },
     });
   }
-  console.log(user);
   return (
     <>
       <Card className={classes.root}>
         <CardHeader
           avatar={
             <Avatar
-              src={user.avatar}
+              src={author.avatar}
               aria-label='recipe'
               className={classes.avatar}
             >
-              {user.name.substring(0, 1)}
+              {author.name.substring(0, 1)}
             </Avatar>
           }
           action={
@@ -160,7 +159,7 @@ export default function Post(props) {
               </Menu>
             </>
           }
-          title={post.id}
+          title={author.name}
           subheader={moment(post.createdAt).fromNow()}
         />
         <CardContent>

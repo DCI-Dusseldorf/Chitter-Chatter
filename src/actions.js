@@ -1,11 +1,11 @@
 import Axios from 'axios';
-import { store } from './redux';
+import { store } from './store';
 
 export const updatePosts = async () => {
   const response = await fetch('/api/post/', {
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
   });
   const result = await response.json();
@@ -18,7 +18,7 @@ export const reactPost = async (postId, reaction) => {
     method: 'PUT',
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
   });
   const result = await response.json();
@@ -28,7 +28,7 @@ export const removeReactPost = async (postId, reaction) => {
     method: 'DELETE',
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
   });
 };
@@ -38,7 +38,7 @@ export const commentPost = async (postId, message) => {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
     body: JSON.stringify({ message: message }),
   });
@@ -52,7 +52,7 @@ export const editPost = async (postId, message) => {
     method: 'PATCH',
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
     body: JSON.stringify({ message: message }),
   });
@@ -64,7 +64,7 @@ export const deletePost = async (postId) => {
     method: 'DELETE',
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
   });
   updatePosts();
@@ -75,7 +75,7 @@ export const search = async (match, type = 'User', field = 'name') => {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
     body: JSON.stringify({ match, type, field }),
   });
@@ -89,14 +89,27 @@ export const search = async (match, type = 'User', field = 'name') => {
       field,
     });
 };
+export const avatarUpload = (e, id) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(e.target.files[0]);
+  reader.onload = async (e) => {
+    console.log(e);
+    await Axios.patch(`/api/user/${id}`, {
+      avatar: e.target.result,
+    });
+    store.dispatch({
+      type: 'user:avatar',
+      avatar: e.target.result,
+    });
+  };
+};
 
 export const getFriendsProfiles = (arrayOfUserIds) => {
-  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id.id}`)))
+  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
     .then((arrayOfResponses) =>
       arrayOfResponses.map((response) => response.data)
     )
     .then((arrayOfData) => {
-      console.log(arrayOfData);
       store.dispatch({ type: 'friends:Profiles', friends: arrayOfData });
     });
 };
