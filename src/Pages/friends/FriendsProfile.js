@@ -9,8 +9,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useStyles } from './friendsStyle';
+import { addFriend, removeFriend } from '../../actions';
 
 function FriendsProfile(props) {
+  console.log(props.friends);
   const classes = useStyles();
   return (
     <>
@@ -19,10 +21,10 @@ function FriendsProfile(props) {
           <CardActionArea>
             <CardMedia
               component='img'
-              alt='Contemplative Reptile'
+              alt='Profile Picture'
               height='140'
-              image={bg1}
-              title='Contemplative Reptile'
+              image={props.friends.avatar || bg1}
+              title='Profile Picture'
             />
             <CardContent>
               <Typography gutterBottom variant='h5' component='h2'>
@@ -35,12 +37,47 @@ function FriendsProfile(props) {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button size='small' color='primary'>
-              Remove Friend
-            </Button>
-            <Button size='small' color='primary'>
-              Message
-            </Button>
+            {props.pending ? (
+              <>
+                <Button
+                  size='small'
+                  color='primary'
+                  onClick={(e) => addFriend(props.friends.id)}
+                >
+                  Accept Request
+                </Button>
+                <Button size='small' color='primary'>
+                  Delete Request
+                </Button>
+              </>
+            ) : props.outgoing ? (
+              <>
+                <Button
+                  size='small'
+                  color='primary'
+                  onClick={(e) => {
+                    removeFriend(props.friends.id);
+                  }}
+                >
+                  cancel Request
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  size='small'
+                  color='primary'
+                  onClick={(e) => {
+                    removeFriend(props.friends.id);
+                  }}
+                >
+                  Remove Friend
+                </Button>
+                <Button size='small' color='primary'>
+                  Message
+                </Button>
+              </>
+            )}
           </CardActions>
         </Card>
       </Container>

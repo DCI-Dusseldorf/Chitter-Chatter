@@ -7,6 +7,8 @@ const defaulttokens = {
   posts: [],
   search: {},
   friends: [],
+  friendsRequest: [],
+  friendsRequestSent: [],
 };
 if (defaulttokens.accessToken)
   Axios.defaults.headers.common.Authorization = defaulttokens.accessToken;
@@ -22,6 +24,8 @@ export const auth = (state = defaulttokens, action) => {
     list,
     avatar,
     friends,
+    friendsRequest,
+    friendsRequestSent,
   } = action;
   switch (action.type) {
     case 'Login':
@@ -57,6 +61,10 @@ export const auth = (state = defaulttokens, action) => {
       return { ...state, user: { ...state.user, avatar } };
     case 'friends:Profiles':
       return { ...state, friends: friends };
+    case 'friendsRequest:Profile':
+      return { ...state, friendsRequest: friendsRequest };
+    case 'friendsRequestSent:Profile':
+      return { ...state, friendsRequestSent: friendsRequestSent };
     default:
       return state;
   }

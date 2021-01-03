@@ -1,11 +1,22 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getUser } from './action';
+import { getUser, getUserPostsOnly } from './action';
 
 export function useUser(id) {
-  console.log(id);
   useEffect((e) => getUser(id), [id]);
   const user = useSelector((state) => state.cache.user[id]);
-  console.log(user);
   return user || { name: 'User', id };
+}
+
+export function useUserPostsOnly(id) {
+  console.log(id);
+  useEffect(
+    (e) => {
+      console.log(id);
+      getUserPostsOnly(id);
+    },
+    [id]
+  );
+  const post = useSelector((state) => state.cache.postsOnlyFor[id]);
+  return post;
 }

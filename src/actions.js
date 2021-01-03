@@ -113,3 +113,53 @@ export const getFriendsProfiles = (arrayOfUserIds) => {
       store.dispatch({ type: 'friends:Profiles', friends: arrayOfData });
     });
 };
+export const getFriendsRequestProfiles = (arrayOfUserIds) => {
+  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
+    .then((arrayOfResponses) =>
+      arrayOfResponses.map((response) => response.data)
+    )
+    .then((arrayOfData) => {
+      store.dispatch({
+        type: 'friendsRequest:Profile',
+        friendsRequest: arrayOfData,
+      });
+    });
+};
+export const getFriendsRequestSentProfiles = (arrayOfUserIds) => {
+  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
+    .then((arrayOfResponses) =>
+      arrayOfResponses.map((response) => response.data)
+    )
+    .then((arrayOfData) => {
+      store.dispatch({
+        type: 'friendsRequestSent:Profile',
+        friendsRequestSent: arrayOfData,
+      });
+    });
+};
+export const removeFriend = (id) => {
+  const response = fetch(`/api/friends/reject`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: store.getState().auth.accessToken,
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  console.log(response);
+};
+
+export const addFriend = (id) => {
+  const response = fetch(`/api/friends/approve`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: store.getState().auth.accessToken,
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+};

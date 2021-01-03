@@ -1,6 +1,6 @@
 import { Avatar, GridList } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -25,7 +25,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 
 import { avatarUpload, getFriendsProfiles } from '../../actions';
-import { useUser } from '../../component/Data/hooks';
+import { useUser, useUserPostsOnly } from '../../component/Data/hooks';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -59,48 +59,57 @@ function a11yProps(index) {
 
 function Profile() {
   const classes = useStyles();
-  let { userId } = useParams();
+  //let { userId } = useParams();
+  const dispatch = useDispatch();
   const { accessToken, user: myUser, posts } = useSelector(
     (state) => state.auth
   );
+
   const avatar = useSelector((state) => state.auth.user.avatar);
-  const [searchedUser, setSearchedUser] = useState({});
+  //const [searchedUser, setSearchedUser] = useState({});
   const [value, setValue] = React.useState(0);
   const friendsIds = useSelector((state) => state.auth.user.friends);
-  const friendsRequests = useSelector(
-    (state) => state.auth.user.friendRequests
-  );
-  useEffect(() => getFriendsProfiles(friendsIds), [friendsIds]);
+  // const friendsRequestsId = useSelector(
+  //   (state) => state.auth.user.friendRequests
+  // );
+  // console.log(friendsRequestsId);
+  // friendsIds.push(...friendsRequestsId);
+  useEffect(() => {
+    getFriendsProfiles(friendsIds);
+    // getFriendsProfiles(friendsRequestsId);
+    dispatch({ type: 'user:posts:only', posts: posts, userId: myUser.id });
+  }, [friendsIds]);
   const friends = useSelector((state) => state.auth.friends);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  if (!userId) {
-    userId = myUser.id;
-  }
-  useEffect(() => {
-    fetch('/api/user/' + userId, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: accessToken,
-      },
-    })
-      .then((response) => response.json())
-      .then((userinfo) => setSearchedUser(userinfo));
-  }, [userId]);
+  // if (!userId) {
+  //   userId = myUser.id;
+  // }
+  // useEffect(() => {
+  //   fetch('/api/user/' + userId, {
+  //     headers: {
+  //       'content-type': 'application/json',
+  //       Authorization: accessToken,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((userinfo) => setSearchedUser(userinfo));
+  // }, [userId]);
   const user = useUser(myUser.id);
-  console.log(user);
+  // const posts = useUserPostsOnly(myUser.id);
+  // console.log(posts);
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3} justify='center'>
         <Grid item xs={9}>
           <Paper className={classes.paper}>
-            {searchedUser.name}
+            {user.name}
             <br />
-            {searchedUser.email}
+            {user.email}
             <div className={classes.icons}>
               <Avatar>
                 <label htmlFor='file'>
