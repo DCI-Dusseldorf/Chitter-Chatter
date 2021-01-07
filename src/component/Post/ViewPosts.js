@@ -24,15 +24,16 @@ const ViewPosts = (props) => {
   const posts = useSelector((state) => {
     return state.auth.posts;
   });
+  const token = useSelector((state) => state.auth.token);
   useEffect(() => {
-    if (props.token) updatePosts();
+    if (token) updatePosts();
     //updatePosts(props.token).then((posts)=>setPosts(posts)); same as above
-  }, [props.token]);
+  }, [token]);
   return (
     <Container className={classes.rootGrid}>
-      {posts.map((post) => (
-        <Post post={post} key={post.id} />
-      ))}
+      {props.posts
+        ? props.posts.map((post) => <Post post={post} key={post.id} />)
+        : posts.map((post) => <Post post={post} key={post.id} />)}
     </Container>
   );
 };

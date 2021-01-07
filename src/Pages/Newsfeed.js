@@ -6,11 +6,12 @@ import ViewPosts from '../component/Post/ViewPosts';
 
 function Newsfeed() {
   const token = useSelector((state) => state.auth.accessToken);
+  // const userId = useSelector((state) => state.auth.user.id);
   return (
     <>
       <Container className='newsfeed'>
         <AddPost token={token} />
-        <ViewPosts token={token} />
+        <ViewPosts />
       </Container>
     </>
   );

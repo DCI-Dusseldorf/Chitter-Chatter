@@ -9,10 +9,8 @@ export function useUser(id) {
 }
 
 export function useUserPostsOnly(id) {
-  console.log(id);
   useEffect(
     (e) => {
-      console.log(id);
       getUserPostsOnly(id);
     },
     [id]

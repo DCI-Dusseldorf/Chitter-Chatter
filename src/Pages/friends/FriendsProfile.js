@@ -12,7 +12,6 @@ import { useStyles } from './friendsStyle';
 import { addFriend, removeFriend } from '../../actions';
 
 function FriendsProfile(props) {
-  console.log(props.friends);
   const classes = useStyles();
   return (
     <>

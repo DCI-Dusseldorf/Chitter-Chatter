@@ -1,4 +1,4 @@
-import { Avatar } from '@material-ui/core';
+import { Avatar, Container } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import { useStyles } from './profileStyle';
 import { StyledBadge } from './styledBadgeAvatar';
 import { addFriend, removeFriend } from '../../actions';
+import { getSearcheduserPost } from '../../component/Data/action';
+import ViewPosts from '../../component/Post/ViewPosts';
 
 function UserProfile() {
   const classes = useStyles();
@@ -16,6 +18,7 @@ function UserProfile() {
 
   const [searchedUser, setSearchedUser] = useState({});
   const [toggleFriend, setToggleFriend] = useState(false);
+  // getSearcheduserPost(userId);
   useEffect(() => {
     fetch('/api/user/' + userId, {
       headers: {
@@ -24,9 +27,15 @@ function UserProfile() {
       },
     })
       .then((response) => response.json())
-      .then((userinfo) => setSearchedUser(userinfo));
+      .then((userinfo) => {
+        setSearchedUser(userinfo);
+      });
+    getSearcheduserPost(userId);
   }, [userId]);
-
+  const searchedUserPosts = useSelector(
+    (state) => state.cache.searchedUserpost[userId]
+  );
+  console.log(searchedUserPosts);
   function changeFriend() {
     if (toggleFriend === false) {
       setToggleFriend(true);
@@ -38,43 +47,48 @@ function UserProfile() {
   }
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3} justify='center'>
-        <Grid item xs={9}>
-          <Paper className={classes.paper}>
-            {searchedUser.name}
-            <br />
-            {searchedUser.email}
-            <div className={classes.icons}>
+    <>
+      <div className={classes.root}>
+        <Grid container spacing={3} justify='center'>
+          <Grid item xs={9}>
+            <Paper className={classes.paper}>
+              {searchedUser.name}
+              <br />
+              {searchedUser.email}
+              <div className={classes.icons}>
+                <Avatar
+                  onClick={(e) => {
+                    changeFriend(userId);
+                  }}
+                  className={
+                    toggleFriend ? classes.addFriend : classes.removeFriend
+                  }
+                >
+                  <PersonAddIcon />
+                </Avatar>
+              </div>
+            </Paper>
+            <StyledBadge
+              className={classes.dot + ' ' + classes.badge}
+              overlap='circle'
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              variant='dot'
+            >
               <Avatar
-                onClick={(e) => {
-                  changeFriend(userId);
-                }}
-                className={
-                  toggleFriend ? classes.addFriend : classes.removeFriend
-                }
-              >
-                <PersonAddIcon />
-              </Avatar>
-            </div>
-          </Paper>
-          <StyledBadge
-            className={classes.dot + ' ' + classes.badge}
-            overlap='circle'
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            variant='dot'
-          >
-            <Avatar
-              src={searchedUser.avatar}
-              className={classes.large}
-            ></Avatar>
-          </StyledBadge>
+                src={searchedUser.avatar}
+                className={classes.large}
+              ></Avatar>
+            </StyledBadge>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
+      </div>
+      <Container className={classes.container}>
+        <ViewPosts posts={searchedUserPosts} />
+      </Container>
+    </>
   );
 }
 

@@ -1,7 +1,6 @@
-import { Avatar, GridList } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Avatar } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import EditIcon from '@material-ui/icons/Edit';
@@ -24,7 +23,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 
-import { avatarUpload, getFriendsProfiles } from '../../actions';
+import { avatarUpload, getUsers } from '../../actions';
 import { useUser, useUserPostsOnly } from '../../component/Data/hooks';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,48 +58,22 @@ function a11yProps(index) {
 
 function Profile() {
   const classes = useStyles();
-  //let { userId } = useParams();
-  const dispatch = useDispatch();
-  const { accessToken, user: myUser, posts } = useSelector(
-    (state) => state.auth
-  );
-
+  const { user: myUser } = useSelector((state) => state.auth);
   const avatar = useSelector((state) => state.auth.user.avatar);
-  //const [searchedUser, setSearchedUser] = useState({});
   const [value, setValue] = React.useState(0);
   const friendsIds = useSelector((state) => state.auth.user.friends);
-  // const friendsRequestsId = useSelector(
-  //   (state) => state.auth.user.friendRequests
-  // );
-  // console.log(friendsRequestsId);
-  // friendsIds.push(...friendsRequestsId);
-  useEffect(() => {
-    getFriendsProfiles(friendsIds);
-    // getFriendsProfiles(friendsRequestsId);
-    dispatch({ type: 'user:posts:only', posts: posts, userId: myUser.id });
-  }, [friendsIds]);
-  const friends = useSelector((state) => state.auth.friends);
 
+  useEffect(() => {
+    getUsers(friendsIds);
+  }, [friendsIds]);
+  const usersCache = useSelector((state) => state.cache.user);
+  const friends = friendsIds.map((id) => usersCache[id]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  // if (!userId) {
-  //   userId = myUser.id;
-  // }
-  // useEffect(() => {
-  //   fetch('/api/user/' + userId, {
-  //     headers: {
-  //       'content-type': 'application/json',
-  //       Authorization: accessToken,
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((userinfo) => setSearchedUser(userinfo));
-  // }, [userId]);
   const user = useUser(myUser.id);
-  // const posts = useUserPostsOnly(myUser.id);
-  // console.log(posts);
+  const userPost = useUserPostsOnly(myUser.id) || [];
 
   return (
     <div className={classes.root}>
@@ -162,11 +135,9 @@ function Profile() {
             </Tabs>
           </Paper>
           <TabPanel value={value} index={0}>
-            {posts.map((post) =>
-              post.author == myUser.id ? (
-                <Post post={post} key={post.id} />
-              ) : null
-            )}
+            {userPost.map((post) => (
+              <Post post={post} key={post.id} />
+            ))}
           </TabPanel>
           <Grid cellHeight={180} className={classes.gridList}>
             <TabPanel value={value} index={1}>

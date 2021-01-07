@@ -10,7 +10,7 @@ import { Autocomplete } from '@material-ui/lab';
 function Search() {
   const classes = useStyles();
   const history = useHistory();
-  const { list } = useSelector((state) => state.auth.search);
+  const { list } = useSelector((state) => state.cache.search);
   const change = (e) => search(e.target.value);
   const select = (e, v, r) => {
     if (r === 'select-option') history.push(`/userprofile/${v.id}`);
