@@ -1,11 +1,22 @@
 import Axios from 'axios';
 import { store } from './store';
 
+export const getmyUser = async () => {
+  const { user, accessToken } = store.getState().auth;
+  const result = await Axios.get(`/api/user/${user.id}`, {
+    headers: {
+      Authorization: accessToken,
+    },
+  });
+  store.dispatch({ type: 'myUser', user: result.data });
+};
+
 export const updatePosts = async () => {
+  const { user, accessToken } = store.getState().auth;
   const response = await fetch('/api/post/', {
     headers: {
       'content-type': 'application/json',
-      Authorization: store.getState().auth.accessToken,
+      Authorization: accessToken,
     },
   });
   const result = await response.json();
@@ -104,55 +115,18 @@ export const avatarUpload = (e, id) => {
   };
 };
 
-export const getFriendsProfiles = (arrayOfUserIds) => {
+export const getUsers = (arrayOfUserIds) => {
   Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
     .then((arrayOfResponses) =>
       arrayOfResponses.map((response) => response.data)
     )
     .then((arrayOfData) => {
-      store.dispatch({ type: 'friends:Profiles', friends: arrayOfData });
+      store.dispatch({ type: 'users', users: arrayOfData });
     });
-};
-export const getFriendsRequestProfiles = (arrayOfUserIds) => {
-  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
-    .then((arrayOfResponses) =>
-      arrayOfResponses.map((response) => response.data)
-    )
-    .then((arrayOfData) => {
-      store.dispatch({
-        type: 'friendsRequest:Profile',
-        friendsRequest: arrayOfData,
-      });
-    });
-};
-export const getFriendsRequestSentProfiles = (arrayOfUserIds) => {
-  Promise.all(arrayOfUserIds.map((id) => Axios.get(`/api/user/${id}`)))
-    .then((arrayOfResponses) =>
-      arrayOfResponses.map((response) => response.data)
-    )
-    .then((arrayOfData) => {
-      store.dispatch({
-        type: 'friendsRequestSent:Profile',
-        friendsRequestSent: arrayOfData,
-      });
-    });
-};
-export const removeFriend = (id) => {
-  const response = fetch(`/api/friends/reject`, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      Authorization: store.getState().auth.accessToken,
-    },
-    body: JSON.stringify({
-      id: id,
-    }),
-  });
-  console.log(response);
 };
 
-export const addFriend = (id) => {
-  const response = fetch(`/api/friends/approve`, {
+export const removeFriend = async (id) => {
+  const response = await fetch(`/api/friends/reject`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -162,4 +136,19 @@ export const addFriend = (id) => {
       id: id,
     }),
   });
+  getmyUser();
+};
+
+export const addFriend = async (id) => {
+  const response = await fetch(`/api/friends/approve`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: store.getState().auth.accessToken,
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  getmyUser();
 };

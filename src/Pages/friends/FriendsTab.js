@@ -8,11 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  getFriendsProfiles,
-  getFriendsRequestProfiles,
-  getFriendsRequestSentProfiles,
-} from '../../actions';
+import { getmyUser, getUsers } from '../../actions';
 import FriendsProfile from './FriendsProfile';
 
 function TabPanel(props) {
@@ -81,17 +77,16 @@ export default function FriendsTab() {
   const sentRequestId = useSelector(
     (state) => state.auth.user.friendRequestsSent
   );
-  console.log(sentRequestId);
   useEffect(() => {
-    getFriendsProfiles(friendsIds);
-    getFriendsRequestProfiles(pendingRequestIds);
-    getFriendsRequestSentProfiles(sentRequestId);
+    getUsers(friendsIds);
+    getUsers(pendingRequestIds);
+    getUsers(sentRequestId);
+    getmyUser();
   }, [friendsIds, pendingRequestIds, sentRequestId]);
-  const friends = useSelector((state) => state.auth.friends);
-  const friendsRequest = useSelector((state) => state.auth.friendsRequest);
-  const friendsRequestSent = useSelector(
-    (state) => state.auth.friendsRequestSent
-  );
+  const usersCache = useSelector((state) => state.cache.user);
+  const friends = friendsIds.map((id) => usersCache[id]);
+  const friendsRequest = pendingRequestIds.map((id) => usersCache[id]);
+  const friendsRequestSent = sentRequestId.map((id) => usersCache[id]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
