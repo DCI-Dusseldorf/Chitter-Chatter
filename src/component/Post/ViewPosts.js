@@ -22,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
 const ViewPosts = (props) => {
   const classes = useStyles();
   const posts = useSelector((state) => {
-    return state.posts;
+    return state.auth.posts;
   });
   useEffect(() => {
-    if (props.token) updatePosts(props.token);
+    if (props.token) updatePosts();
     //updatePosts(props.token).then((posts)=>setPosts(posts)); same as above
   }, [props.token]);
   return (

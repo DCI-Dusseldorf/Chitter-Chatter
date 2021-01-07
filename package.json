@@ -22,7 +22,7 @@
     "web-vitals": "^0.2.4"
   },
   "homepage": "https://sz.hktr.de/chitter/",
-  "proxy":"http://danyloveselyi.me:3000",
+  "proxy":"https://sz.hktr.de",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "cd build && scp -r * chitter@sz.hktr.de: ",

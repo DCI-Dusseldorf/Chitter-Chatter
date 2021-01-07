@@ -27,9 +27,9 @@ import Search from '../Search/Search';
 
 export default function Navbar() {
   const [sidebar, setSidebar] = useState(false);
-  const refreshToken = useSelector((state) =>  state.refreshToken);
-  const accessToken = useSelector((state) =>  state.accessToken);
-  const user = useSelector((state)=>state.user)
+  const refreshToken = useSelector((state) =>  state.auth.refreshToken);
+  const accessToken = useSelector((state) =>  state.auth.accessToken);
+  const user = useSelector((state)=>state.auth.user)
   const history=useHistory();
   const dispatch = useDispatch();
  

@@ -9,6 +9,9 @@ export const useStyles = makeStyles((theme) => ({
     marginTop: '60px',
     maxWidth: 500,
   },
+  rootcard: {
+    maxWidth: 200,
+  },
   paper: {
     position: 'relative',
     padding: theme.spacing(2),
@@ -43,5 +46,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   removeFriend: {
     color: 'grey',
+  },
+  gridList: {
+    width: 500,
+    height: 450,
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
 }));

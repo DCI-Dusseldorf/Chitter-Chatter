@@ -1,18 +1,18 @@
 import Axios from 'axios';
 
-const { createStore } = require('redux');
-
 const defaulttokens = {
-  accessToken: JSON.parse(localStorage.getItem('access-token') || 'false'),
-  refreshToken: JSON.parse(localStorage.getItem('refresh-token') || 'false'),
+  accessToken: localStorage.getItem('access-token') || false,
+  refreshToken: localStorage.getItem('refresh-token') || false,
   user: JSON.parse(localStorage.getItem('myUser')) || {},
   posts: [],
   search: {},
   friends: [],
+  friendsRequest: [],
+  friendsRequestSent: [],
 };
 if (defaulttokens.accessToken)
   Axios.defaults.headers.common.Authorization = defaulttokens.accessToken;
-const reducer = (state = defaulttokens, action) => {
+export const auth = (state = defaulttokens, action) => {
   const {
     accessToken,
     refreshToken,
@@ -24,6 +24,8 @@ const reducer = (state = defaulttokens, action) => {
     list,
     avatar,
     friends,
+    friendsRequest,
+    friendsRequestSent,
   } = action;
   switch (action.type) {
     case 'Login':
@@ -59,25 +61,11 @@ const reducer = (state = defaulttokens, action) => {
       return { ...state, user: { ...state.user, avatar } };
     case 'friends:Profiles':
       return { ...state, friends: friends };
+    case 'friendsRequest:Profile':
+      return { ...state, friendsRequest: friendsRequest };
+    case 'friendsRequestSent:Profile':
+      return { ...state, friendsRequestSent: friendsRequestSent };
     default:
       return state;
   }
 };
-
-export const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
-
-//on refresh to remain login
-store.subscribe(() => {
-  const state = store.getState();
-  if (
-    // typeof localStorage['access-token'] === 'undefined' ||
-    localStorage['access-token'] === state.accessToken
-  )
-    return;
-  localStorage.setItem('access-token', state.accessToken);
-  localStorage.setItem('refresh-token', state.refreshToken);
-  localStorage.setItem('myUser', JSON.stringify(state.user));
-});

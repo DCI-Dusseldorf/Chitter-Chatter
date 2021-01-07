@@ -1,25 +1,19 @@
-import { Box } from '@material-ui/core';
 import React from 'react';
-import { useEffect } from 'react';
-
-import { useSelector } from 'react-redux';
-import { getFriendsProfiles } from '../../actions';
-import FriendsProfile from './FriendsProfile';
+import { Box } from '@material-ui/core';
 import { useStyles } from './friendsStyle';
+import FriendsTab from './FriendsTab';
 
 function FriendsLists() {
   const classes = useStyles();
-  const friendsIds = useSelector((state) => state.user.friends);
-  useEffect(() => getFriendsProfiles(friendsIds), [friendsIds]);
-  const friends = useSelector((state) => state.friends);
+
   return (
     <>
       <Box width='75%' className={classes.box}>
         F.R.I.E.N.D.S
       </Box>
-      {!friends
-        ? `...loading ${friends.id}`
-        : friends.map((friend) => <FriendsProfile friends={friend} />)}
+      <Box>
+        <FriendsTab />
+      </Box>
     </>
   );
 }

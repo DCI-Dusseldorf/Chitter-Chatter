@@ -5,7 +5,7 @@ import AddPost from '../component/Post/AddPost';
 import ViewPosts from '../component/Post/ViewPosts';
 
 function Newsfeed() {
-  const token = useSelector((state) => state.accessToken);
+  const token = useSelector((state) => state.auth.accessToken);
   return (
     <>
       <Container className='newsfeed'>

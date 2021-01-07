@@ -7,11 +7,11 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { useSelector } from 'react-redux';
 import { useStyles } from './profileStyle';
 import { StyledBadge } from './styledBadgeAvatar';
-import Axios from 'axios';
+import { addFriend, removeFriend } from '../../actions';
 
 function UserProfile() {
   const classes = useStyles();
-  const { accessToken } = useSelector((state) => state);
+  const { accessToken } = useSelector((state) => state.auth);
   let { userId } = useParams();
 
   const [searchedUser, setSearchedUser] = useState({});
@@ -30,39 +30,11 @@ function UserProfile() {
   function changeFriend() {
     if (toggleFriend === false) {
       setToggleFriend(true);
-      addFriend();
+      addFriend(userId);
     } else if (toggleFriend === true) {
       setToggleFriend(false);
-      removeFriend();
+      removeFriend(userId);
     }
-  }
-  async function addFriend() {
-    console.log(userId);
-    const response = fetch(`/api/friends/approve`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: accessToken,
-      },
-      body: JSON.stringify({
-        id: userId,
-      }),
-    });
-    // const response = await Axios.post(`/api/friends/approve`, { id: userId });
-    // console.log(response);
-    // if (response.ok) await Axios.get(`/user/${userId}`);
-  }
-  function removeFriend() {
-    const response = fetch(`/api/friends/reject`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: accessToken,
-      },
-      body: JSON.stringify({
-        id: userId,
-      }),
-    });
   }
 
   return (
